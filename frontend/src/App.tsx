@@ -1,10 +1,10 @@
 import React from 'react';
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import routes from 'pages/routes.tsx';
+import routes from 'pages/routes';
 import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Alerts from 'ui/Alerts/Alerts';
 
 export const router = createBrowserRouter(routes);
 
@@ -23,6 +23,7 @@ const App: React.FC = () => {
       <RecoilNexus />
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <Alerts />
       </QueryClientProvider>
     </RecoilRoot>
   );

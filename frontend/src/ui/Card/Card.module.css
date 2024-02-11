@@ -1,0 +1,14 @@
+.card {
+  max-width: 450px;
+  width: 100%;
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 3px 4px 4px rgba(0, 0, 0, .1);
+  padding: 30px 40px;
+  box-sizing: border-box;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+}

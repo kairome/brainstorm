@@ -1,6 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import _ from 'lodash';
+import cors from 'cors';
 
 import { expressjwt } from 'express-jwt';
 
@@ -13,6 +14,9 @@ dotenv.config();
 const app: Express = express();
 
 app.use(express.json());
+app.use(cors({
+  origin: /localhost/
+}));
 
 app.use(
   expressjwt({

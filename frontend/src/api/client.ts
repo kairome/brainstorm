@@ -1,5 +1,4 @@
 import { deleteFromLs, getFromLs } from 'utils/localStorage';
-
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 const createRequest = (baseURL: string) => {

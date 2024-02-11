@@ -1,7 +1,8 @@
-import Main from './Main.tsx';
-import RegisterPage from 'pages/Register/RegisterPage.tsx';
-import LoginPage from 'pages/Login/LoginPage.tsx';
-import BoardsPage from 'pages/Boards/BoardsPage.tsx';
+import RegisterPage from 'pages/Register/RegisterPage';
+import LoginPage from 'pages/Login/LoginPage';
+import BoardsPage from 'pages/Boards/BoardsPage';
+
+import Main from './Main';
 
 export default [
   {
