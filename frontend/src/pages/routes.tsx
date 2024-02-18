@@ -1,6 +1,7 @@
 import RegisterPage from 'pages/Register/RegisterPage';
 import LoginPage from 'pages/Login/LoginPage';
 import BoardsPage from 'pages/Boards/BoardsPage';
+import Board from 'pages/Board/Board';
 
 import Main from './Main';
 
@@ -17,6 +18,14 @@ export default [
     path: '/',
     element: <Main />,
     children: [
+      {
+        path: '/boards/:id',
+        element: <Board />,
+      },
+      {
+        path: '/',
+        element: <BoardsPage />,
+      },
       // {
       //   path: '/products',
       //   element: <ProductsPage />,
@@ -49,10 +58,6 @@ export default [
       //   path: '/history/:productId',
       //   element: <HistoryPage />,
       // },
-      {
-        path: '/',
-        element: <BoardsPage />,
-      },
       // {
       //   path: '*',
       //   element: <NotFoundPage />,

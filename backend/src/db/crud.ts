@@ -1,14 +1,15 @@
 import { DbInstance } from './index';
-import { Collection, Document, Filter, FindOptions, OptionalUnlessRequiredId } from 'mongodb';
-import { UserDoc } from '@/types/user';
+import { Collection, Document, Filter, FindOptions, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
 
-class DbCrud<T extends Document> {
+export class DbCrud<T extends Document> {
   private readonly collection: Collection<T>;
+
   constructor(dbInstance: DbInstance, collectionName: string) {
     this.collection = dbInstance.getCollection(collectionName);
   }
-  public async getAll() {
-    const cursor = this.collection.find({});
+
+  public async getAll(filters: Filter<T> = {}, options?: FindOptions<T>) {
+    const cursor = this.collection.find(filters, options);
     return cursor.toArray();
   }
 
@@ -16,17 +17,18 @@ class DbCrud<T extends Document> {
     return this.collection.findOne(filters, options);
   }
 
-  public async createOne(doc: OptionalUnlessRequiredId<T>) {
+  public async getOneById(id: string, options?: FindOptions<T>) {
+    return this.collection.findOne({ _id: new ObjectId(id) } as any, options);
+  }
+
+  protected async createOne(doc: OptionalUnlessRequiredId<T>) {
     return await this.collection.insertOne(doc);
   }
-}
 
-export class UsersCrud extends DbCrud<UserDoc> {
-  constructor(dbInstance: DbInstance) {
-    super(dbInstance, 'users');
-  }
-
-  public async getUserByEmail(email: string) {
-    return this.getOne({ email }, { projection: { passwordHash: 0 }});
+  protected async updateOne(doc: Partial<T> & { id: string }) {
+    return this.collection.updateOne({ _id: new ObjectId(doc.id) } as any, {
+      $set: { ...doc, updatedAt: new Date() },
+    });
   }
 }
+

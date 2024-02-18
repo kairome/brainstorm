@@ -1,0 +1,69 @@
+.boards {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.boardCard {
+  max-width: 100%;
+  min-height: 240px;
+  cursor: pointer;
+  transition: .2s transform linear;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.newBoardCard {
+  composes: boardCard;
+  padding: 21px;
+
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    text-align: center;
+  }
+
+  svg {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+.boardContent {
+  flex: 1;
+  padding: 10px 15px;
+  box-sizing: border-box;
+}
+
+.boardHeader {
+  display: flex;
+  align-items: flex-start;
+
+  h2 {
+    margin-top: 0;
+    font-size: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.thumbnail {
+  width: 100%;
+  flex: 2;
+  max-height: 240px;
+}
+
+.boardLoader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

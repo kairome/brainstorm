@@ -75,3 +75,33 @@
 .inputIconRight {
   right: 10px;
 }
+
+.inlineInputContainer {
+  display: flex;
+  align-items: flex-end;
+  cursor: text;
+  border: 2px solid transparent;
+  border-bottom-color: var(--text-color);
+  padding: 5px;
+  max-width: 300px;
+  transition: .2s ease-in all;
+  border-radius: 4px;
+
+  svg {
+    font-size: 22px;
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+
+  &:hover, &:focus-within {
+    border-color: var(--text-color);
+  }
+}
+
+.inlineInput {
+  font-size: 18px;
+  background: inherit;
+  border: none;
+  outline: none;
+  color: var(--text-color);
+}

@@ -1,3 +1,5 @@
+import { VariantType } from 'react-tooltip';
+
 export interface AlertPayload {
   type: 'success' | 'info' | 'error',
   message: string,
@@ -6,4 +8,9 @@ export interface AlertPayload {
 
 export interface AlertStateItem extends AlertPayload {
   id: string,
+}
+
+export interface TooltipNotificationState {
+  message: string,
+  variant: VariantType,
 }

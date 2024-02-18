@@ -15,7 +15,7 @@ const regSchema = object({
 const loginSchema = object({
   email: string().email(EMAIL_MSG).required(REQUIRED_MSG),
   password: string().required(REQUIRED_MSG),
-})
+});
 
 const mapErrors = (error: YupError) => {
   return _.map(error.inner, v => ({ name: v.path, message: v.message }));

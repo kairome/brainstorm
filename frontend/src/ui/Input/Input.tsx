@@ -16,6 +16,7 @@ interface Props {
   icon?: React.ReactNode,
   iconPosition?: 'left' | 'right',
   autoComplete?: string,
+  onBlur?: () => void,
 }
 
 const Input: React.FC<Props> = (props) => {

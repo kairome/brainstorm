@@ -40,3 +40,9 @@
 .btnLoader {
   border-top-color: var(--btn-primary-text) !important;
 }
+
+.btnSm {
+  font-size: 18px;
+  height: 40px;
+  padding: 8px 16px;
+}

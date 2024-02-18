@@ -8,6 +8,7 @@ interface Props {
   children: React.ReactNode,
   type?: 'button' | 'submit',
   theme?: 'primary' | 'outline' | 'underline',
+  size?: 'sm',
   onClick?: () => void,
   className?: string,
   fullWidth?: boolean,
@@ -24,12 +25,14 @@ const Button: React.FC<Props> = (props) => {
     fullWidth,
     loading,
     disabled,
+    size,
   } = props;
 
   const btnClasses = classNames(s.button, className, {
     [s.buttonPrimary]: theme === 'primary',
     [s.buttonUnderline]: theme === 'underline',
     [s.buttonFullWidth]: fullWidth,
+    [s.btnSm]: size === 'sm',
   });
 
   return (

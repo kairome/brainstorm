@@ -7,6 +7,7 @@ interface Props {
   title?: React.ReactNode,
   children: React.ReactNode,
   className?: string,
+  onClick?: () => void,
 }
 
 const Card: React.FC<Props> = (props) => {
@@ -28,7 +29,7 @@ const Card: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className={classes}>
+    <div className={classes} onClick={props.onClick}>
       {renderTitle()}
       {children}
     </div>

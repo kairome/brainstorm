@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Toggle from 'ui/Toggle/Toggle';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { useDarkMode } from 'usehooks-ts';
-import { getFromLs, setToLs } from 'utils/localStorage';
-import _ from 'lodash';
 
 import s from './ThemeSwitch.module.css';
+import { useRecoilState } from 'recoil';
+import { themeState } from 'store/theme.ts';
 
 interface Props {
 
@@ -13,34 +13,33 @@ interface Props {
 
 const ThemeSwitch: React.FC<Props> = () => {
   const { isDarkMode } = useDarkMode();
-  const [darkTheme, setDarkTheme] = useState(getFromLs('darkTheme') ?? isDarkMode);
+  const [theme, setTheme] = useRecoilState(themeState);
 
   useEffect(() => {
-    const lsTheme = getFromLs('darkTheme');
-    if (_.isNil(lsTheme)) {
-      setToLs('darkTheme', isDarkMode);
+    if (!theme) {
+      setTheme(isDarkMode ? 'dark' : 'light');
     }
   }, []);
 
   useEffect(() => {
-    if (darkTheme) {
+    if (theme === 'dark') {
       document.body.classList.add('dark');
     } else {
       document.body.classList.remove('dark');
     }
-  }, [darkTheme]);
+  }, [theme]);
 
   const handleThemeChange = (value: boolean) => {
-    setDarkTheme(value);
-    setToLs('darkTheme', value);
+    const newTheme = value ? 'dark' : 'light';
+    setTheme(newTheme);
   };
 
   return (
     <div>
       <Toggle
-        checked={darkTheme}
+        checked={theme === 'dark'}
         onChange={handleThemeChange}
-        label={darkTheme ? <MdDarkMode className={s.icon} /> : <MdLightMode className={s.icon} />}
+        label={theme === 'dark' ? <MdDarkMode className={s.icon} /> : <MdLightMode className={s.icon} />}
       />
     </div>
   );

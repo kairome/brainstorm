@@ -1,7 +1,6 @@
 import { Request } from "express-jwt";
 
 export interface JwtPayload {
-  email: string,
   userId: string,
 }
 

@@ -1,0 +1,57 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+
+  :global(.tlui-page-menu__trigger) {
+    display: none;
+  }
+}
+
+.customControls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 100px;
+  z-index: 300;
+  column-gap: 20px;
+}
+
+.customControlPanel {
+  background-color: var(--board-panel-bg);
+  min-height: 60px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+}
+
+.goBackIcon {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.controlPanelIcon {
+  font-size: 40px;
+  cursor: pointer;
+
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+
+  transition: .2s linear all;
+
+  &:hover {
+    background-color: var(--board-control-icon-bg);
+  }
+}
+
+.titleInput {
+  font-size: 20px;
+}

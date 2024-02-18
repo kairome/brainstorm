@@ -5,10 +5,11 @@ import express from 'express';
 import { generateToken } from '@/utils/auth';
 import { BadRequestException, ValidationException } from '@/exceptions';
 import { validateLoginData, validateRegData } from '@/utils/validations';
+import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/register', asyncHandler(async (req, res) => {
   const validationErrors = await validateRegData(req.body);
 
   if (validationErrors) {
@@ -24,14 +25,14 @@ router.post('/register', async (req, res) => {
   }
 
   const passHash = await bcrypt.hash(password, 10);
-  const newUser = await db.userCrud.createOne({ name, email, passwordHash: passHash });
+  const newUser = await db.userCrud.createUser({ name, email, passwordHash: passHash });
 
   res.json({
     token: generateToken(email, String(newUser.insertedId)),
   });
-});
+}));
 
-router.post('/login', async (req, res) => {
+router.post('/login', asyncHandler(async (req, res) => {
   const { password, email } = req.body;
 
   const validationErrors = await validateLoginData(req.body);
@@ -57,6 +58,6 @@ router.post('/login', async (req, res) => {
   res.json({
     token: generateToken(user.email, user._id),
   });
-});
+}));
 
 export default router;

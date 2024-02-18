@@ -1,3 +1,5 @@
+import { Document } from 'mongodb';
+
 export interface YupError extends Error {
   errors: string[],
   inner: {
@@ -9,4 +11,9 @@ export interface YupError extends Error {
 export interface ValidationError {
   name: string,
   message: string,
+}
+
+export interface TimeStampDocument extends Document {
+  createdAt: Date,
+  updatedAt: Date,
 }

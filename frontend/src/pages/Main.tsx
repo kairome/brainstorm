@@ -6,6 +6,7 @@ import Button from 'ui/Button/Button';
 import { useQuery } from '@tanstack/react-query';
 import { fetchUser } from 'api/user';
 import Loader from 'ui/Loader/Loader';
+import s from './Main.module.css';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
@@ -15,8 +16,6 @@ const Main: React.FC = () => {
     queryFn: fetchUser.request,
     enabled: false,
   });
-
-  console.log('user -> ', user);
 
   useEffect(() => {
     const token = getFromLs('token');
@@ -35,10 +34,20 @@ const Main: React.FC = () => {
     navigate('/login');
   };
 
+  if (isLoading) {
+    return (
+      <div className={s.loaderWrapper}>
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div id="detail">
       <Header buttons={(<Button onClick={handleLogout}>Logout</Button>)} />
-      {isLoading ? (<Loader />) : <Outlet />}
+      <div className={s.content}>
+        <Outlet />
+      </div>
     </div>
   );
 };
