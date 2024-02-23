@@ -1,0 +1,14 @@
+.avatar {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  background: var(--header-account-bg);
+  justify-content: center;
+  border-radius: 50%;
+
+  svg {
+    font-size: 25px;
+    color: var(--header-account-color);
+  }
+}

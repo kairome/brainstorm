@@ -24,3 +24,31 @@
   display: flex;
   column-gap: 20px;
 }
+
+.menu {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.menuItem {
+  font-size: 18px;
+  color: var(--border-color);
+  transition: .2s ease-out all;
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+
+  &:hover {
+    color: var(--text-color);
+  }
+}
+
+.menuItemActive {
+  color: var(--header-account-bg);
+  font-size: 25px;
+
+  &:hover {
+    color: var(--header-account-bg);
+  }
+}

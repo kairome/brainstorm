@@ -38,6 +38,7 @@ const PasswordInput: React.FC<Props> = (props) => {
 
   const handleGenPassword = () => {
     const newPass = generateStrongPassword();
+    setShowPassword(true);
     props.onChange(newPass);
   };
 

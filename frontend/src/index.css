@@ -48,6 +48,9 @@ body {
   --context-action-bg: rgba(155, 155, 155, 0.3);
 
   --favorite: #F8B400;
+
+  --header-account-bg: #7B52BE;
+  --header-account-color: #ECF0F1;
 }
 
 body.dark {
@@ -72,6 +75,9 @@ body.dark {
   --context-action-bg: rgba(255, 255, 255, 0.4);
 
   --favorite: #FFD54F;
+
+  --header-account-bg: #D3B8FF;
+  --header-account-color: #2C3E50;
 }
 
 body {

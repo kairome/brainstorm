@@ -136,6 +136,7 @@ const BoardCard: React.FC<Props> = (props) => {
             id={`${board._id}-title`}
             content={board.title}
             place="bottom-start"
+            delayShow={1000}
             noArrow
           />
           <div className={s.boardHeaderControls}>
