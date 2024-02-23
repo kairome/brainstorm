@@ -8,7 +8,11 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
   }
 
   public async getByAuthor(authorId: string) {
-    return this.getAll({ author: authorId });
+    return this.getAll({ author: authorId }, {
+      sort: {
+        createdAt: -1
+      }
+    });
   }
 
   public async create(data: CreateBoardPayload) {
@@ -17,14 +21,15 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       customThumbnail: false,
       createdAt: new Date(),
       updatedAt: new Date(),
+      modifiedBy: null,
     });
   }
 
-  public async setTitle(boardId: string, title: string) {
-    return this.updateOne({ id: boardId, title });
+  public async setTitle(boardId: string, title: string, modifiedBy: string) {
+    return this.updateOne({ id: boardId, title, modifiedBy });
   }
 
-  public async setCustomThumbnail(boardId: string, customThumbnail: boolean) {
-    return this.updateOne({ id: boardId, customThumbnail });
+  public async setCustomThumbnail(boardId: string, customThumbnail: boolean, modifiedBy: string) {
+    return this.updateOne({ id: boardId, customThumbnail, modifiedBy });
   }
 }

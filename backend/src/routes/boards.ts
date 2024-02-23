@@ -1,7 +1,7 @@
 import express from 'express';
 import db from '@/db';
 import { JwtRequest } from '@/types/auth';
-import { BadRequestException } from '@/exceptions';
+import { BadRequestException, ForbiddenException } from '@/exceptions';
 import asyncHandler from 'express-async-handler';
 import _ from 'lodash';
 
@@ -34,12 +34,30 @@ router.patch('/:id', asyncHandler(async (req: JwtRequest, res) => {
 
   const boardId = req.params.id;
 
+  const board = await db.boardsCrud.getOneById(boardId);
+
+  if (!board) {
+    return new BadRequestException({ message: 'Board not found' }).throw(res);
+  }
+
+  if (req.auth!.userId !== board.author) {
+    return new ForbiddenException('Only board author can edit the board').throw(res);
+  }
+
+  const user = await db.userCrud.getUserById(req.auth!.userId);
+
+  if (!user) {
+    return new BadRequestException({ message: 'User not found' }).throw(res);
+  }
+
+  const modifiedBy = user.name ?? user.email;
+
   if (title) {
-    await db.boardsCrud.setTitle(boardId, title);
+    await db.boardsCrud.setTitle(boardId, title, modifiedBy);
   }
 
   if (!_.isNil(customThumbnail)) {
-    await db.boardsCrud.setCustomThumbnail(boardId, customThumbnail);
+    await db.boardsCrud.setCustomThumbnail(boardId, customThumbnail, modifiedBy);
   }
 
   res.status(201).send();

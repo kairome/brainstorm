@@ -6,6 +6,7 @@ import Button from 'ui/Button/Button';
 import { useQuery } from '@tanstack/react-query';
 import { fetchUser } from 'api/user';
 import Loader from 'ui/Loader/Loader';
+
 import s from './Main.module.css';
 
 const Main: React.FC = () => {

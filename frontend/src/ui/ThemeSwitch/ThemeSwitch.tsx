@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import Toggle from 'ui/Toggle/Toggle';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { useDarkMode } from 'usehooks-ts';
+import { useRecoilState } from 'recoil';
+import { themeState } from 'store/theme';
 
 import s from './ThemeSwitch.module.css';
-import { useRecoilState } from 'recoil';
-import { themeState } from 'store/theme.ts';
 
 interface Props {
 

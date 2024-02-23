@@ -116,6 +116,7 @@ const SetThumbnail: React.FC<Props> = (props) => {
       <ContextMenu
         id="setThumbnailTooltip"
         actions={actions}
+        offset={25}
       >
         <IoMdImages
           size={30}

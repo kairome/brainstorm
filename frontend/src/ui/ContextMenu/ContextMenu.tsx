@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Tooltip } from 'react-tooltip';
+import { PlacesType, Tooltip } from 'react-tooltip';
 import _ from 'lodash';
+import classNames from 'classnames';
 
 import s from './ContextMenu.module.css';
 
@@ -8,14 +9,21 @@ interface Action {
   title: string,
   onClick: () => void,
   icon: React.ReactNode,
+  className?: string,
 }
 
 interface Props extends React.PropsWithChildren {
   id: string,
   actions: Action[],
+  place?: PlacesType,
+  offset?: number,
 }
 
 const ContextMenu: React.FC<Props> = (props) => {
+  const {
+    place = 'bottom',
+    offset,
+  } = props;
   const [showActions, setShowActions] = useState(false);
 
   const handleInternalToggle = (shouldOpen: boolean) => {
@@ -32,33 +40,42 @@ const ContextMenu: React.FC<Props> = (props) => {
       };
 
       return (
-        <div key={action.title} onClick={handleClick} className={s.action}>
+        <div
+          key={action.title}
+          onClick={handleClick}
+          className={classNames(s.action, action.className)}
+        >
           {action.icon} {action.title}
         </div>
       );
     });
   };
 
+  const handleTriggerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowActions(!showActions);
+  };
+
   return (
     <>
-      <div data-tooltip-id={props.id}>
-        <div
-          onClick={() => setShowActions(!showActions)}
-          className={s.trigger}
-        >
-          {props.children}
-        </div>
+      <div
+        onClick={handleTriggerClick}
+        className={s.trigger}
+        data-tooltip-id={props.id}
+      >
+        {props.children}
       </div>
       <Tooltip
         id={props.id}
-        place="bottom"
+        place={place}
         className={s.tooltip}
         isOpen={showActions}
         globalCloseEvents={{ clickOutsideAnchor: true }}
         setIsOpen={handleInternalToggle}
-        openOnClick
-        offset={25}
+        offset={offset}
         clickable
+        openOnClick
+        delayHide={1}
       >
         <div className={s.actionsContainer}>
           {renderActions()}

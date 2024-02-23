@@ -15,6 +15,18 @@ export class UnauthorizedException extends Exception {
   readonly message = 'Unauthorized';
 }
 
+export class ForbiddenException extends Exception {
+  readonly statusCode = 403;
+  message = 'Action forbidden';
+
+  constructor(message?: string) {
+    super();
+    if (message) {
+      this.message = message;
+    }
+  }
+}
+
 export class BadRequestException extends Exception {
   statusCode = 400;
   message = 'Bad request';

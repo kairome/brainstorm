@@ -4,10 +4,10 @@ import LogoLight from 'assets/brainStormLogo.svg?react';
 import LogoDark from 'assets/brainStormLogoDark.svg?react';
 import { useRecoilValue } from 'recoil';
 import { themeState } from 'store/theme';
+import { useNavigate } from 'react-router-dom';
+import { appHeaderState } from 'store/app';
 
 import s from './Header.module.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { appHeaderState } from 'store/app';
 
 interface Props {
   buttons?: React.ReactNode,

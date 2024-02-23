@@ -6,4 +6,6 @@ export interface Board {
   author: string,
   createdAt: string,
   updatedAt: string,
+  modifiedBy: string,
+  isFavorite: boolean,
 }

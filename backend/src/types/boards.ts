@@ -7,4 +7,5 @@ export interface CreateBoardPayload {
 
 export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   customThumbnail: boolean,
+  modifiedBy: string | null,
 };

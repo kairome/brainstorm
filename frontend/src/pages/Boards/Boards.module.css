@@ -44,6 +44,8 @@
 .boardHeader {
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
+  column-gap: 10px;
 
   h2 {
     margin-top: 0;
@@ -52,6 +54,27 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.boardHeaderControls {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.boardFavIcon {
+  font-size: 40px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.favorite {
+  color: var(--favorite);
+}
+
+.boardActionsIcon {
+  composes: boardFavIcon;
+  font-size: 30px;
 }
 
 .thumbnail {
@@ -66,4 +89,13 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+.removeAction {
+  color: var(--remove-action);
+}
+
+.boardStatus {
+  font-size: 12px;
+  color: var(--border-color)
 }

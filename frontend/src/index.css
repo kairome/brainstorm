@@ -39,12 +39,15 @@ body {
 
   --error: #EA6262;
   --error-input-shadow: rgba(234, 98, 98, .1);
+  --remove-action: #EA6262;
 
   --toggle-bg: #C5C5C5;
 
   --board-control-icon-bg: rgba(123, 82, 190, 0.4);
 
-  --context-action-bg: rgba(155, 155, 155, 0.3)
+  --context-action-bg: rgba(155, 155, 155, 0.3);
+
+  --favorite: #F8B400;
 }
 
 body.dark {
@@ -63,9 +66,12 @@ body.dark {
   --border-color: #8c8c8c;
   --error: #ff7f7f;
   --error-input-shadow: rgba(234, 98, 98, .1);
+  --remove-action: #f92929;
 
   --toggle-bg: #C5C5C5;
-  --context-action-bg: rgba(255, 255, 255, 0.4)
+  --context-action-bg: rgba(255, 255, 255, 0.4);
+
+  --favorite: #FFD54F;
 }
 
 body {
