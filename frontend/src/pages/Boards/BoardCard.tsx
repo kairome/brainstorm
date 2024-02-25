@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Card from 'ui/Card/Card';
 import s from 'pages/Boards/Boards.module.css';
 import { BoardItem } from 'types/boards';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { createPortal } from 'react-dom';
+
 import s from './Modal.module.css';
 
 interface Props {

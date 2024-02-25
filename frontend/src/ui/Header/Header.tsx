@@ -7,12 +7,12 @@ import { themeState } from 'store/theme';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { appHeaderState } from 'store/app';
 import _ from 'lodash';
-
-import s from './Header.module.css';
 import classNames from 'classnames';
 import { TbCards } from 'react-icons/tb';
 import { LuBookTemplate } from 'react-icons/lu';
 import { HiOutlineUserGroup } from 'react-icons/hi2';
+
+import s from './Header.module.css';
 
 interface Props {
   buttons?: React.ReactNode,

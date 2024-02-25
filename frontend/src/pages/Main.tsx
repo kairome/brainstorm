@@ -9,10 +9,10 @@ import ContextMenu from 'ui/ContextMenu/ContextMenu';
 import Avatar from 'ui/Avatar/Avatar';
 import { IoIosLogOut } from 'react-icons/io';
 import { MdOutlineManageAccounts } from 'react-icons/md';
-
-import s from './Main.module.css';
 import { useSetRecoilState } from 'recoil';
 import { userState } from 'store/user';
+
+import s from './Main.module.css';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
