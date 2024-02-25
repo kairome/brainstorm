@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import s from 'pages/Board/Board.module.css';
 import { IoMdImages } from 'react-icons/io';
 import { getSvgAsImage, useEditor } from '@tldraw/tldraw';
 import { useMutation } from '@tanstack/react-query';
@@ -107,7 +106,7 @@ const SetThumbnail: React.FC<Props> = (props) => {
   ];
 
   return (
-    <div className={s.customControlPanel}>
+    <>
       <TooltipNotification
         id="thumbnailAction"
         notification={notification}
@@ -123,7 +122,7 @@ const SetThumbnail: React.FC<Props> = (props) => {
           data-tooltip-id="thumbnailAction"
         />
       </ContextMenu>
-    </div>
+    </>
   );
 };
 

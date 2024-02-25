@@ -56,3 +56,72 @@
 .titleInput {
   font-size: 20px;
 }
+
+.controlPanelTrigger {
+  cursor: pointer;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+
+  transition: .2s linear all;
+
+  &:hover {
+    background-color: var(--hover-primary-bg);
+  }
+}
+
+.panelUsers {
+  position: absolute;
+  background-color: var(--board-panel-bg);
+  padding: 10px;
+  top: 60px;
+  right: 0;
+  box-sizing: border-box;
+  border-radius: 5px;
+  box-shadow: 0 3px 4px 4px rgba(0, 0, 0, .1);
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  width: 180px;
+}
+
+.panelContainer {
+  position: relative;
+}
+
+.activeUserItem {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  cursor: pointer;
+
+  &:hover {
+    .activeUserIcon {
+      border-color: var(--text-color);
+    }
+  }
+}
+
+.userName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.activeUserIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ECF0F1;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}

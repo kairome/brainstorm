@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import SetThumbnail from 'pages/Board/controlPanels/SetThumbnail';
 import { User } from 'types/user';
 import { BoardItem } from 'types/boards';
+import ActiveUsers from 'pages/Board/controlPanels/ActiveUsers';
 
 interface Props {
   user: User,
@@ -80,7 +81,10 @@ const CustomControlPanel: React.FC<Props> = (props) => {
         />
         {renderShareButton()}
       </div>
-      {renderThumbnailAction()}
+      <div className={s.customControlPanel}>
+        {renderThumbnailAction()}
+        <ActiveUsers />
+      </div>
     </div>
   );
 };

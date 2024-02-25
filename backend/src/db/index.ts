@@ -10,8 +10,13 @@ export class DbInstance {
 
   constructor(dbName: string) {
     this.client = new MongoClient(DB_CONNECTION);
-    this.db = this.client.db(dbName);
-    console.log(`Connected to ${dbName} database!`);
+    this.db = this.client.db(dbName, {
+      retryWrites: true,
+      writeConcern: {
+        w: 'majority',
+      }
+    });
+    console.info(`Connected to ${dbName} database!`);
   }
 
   public getCollection<T extends Document>(colName: string) {
