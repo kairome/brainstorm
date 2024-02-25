@@ -1,6 +1,9 @@
 import { BoardDoc, CreateBoardPayload } from '@/types/boards';
 import { DbInstance } from '@/db/index';
 import { DbCrud } from '@/db/crud';
+import { ObjectId } from 'mongodb';
+import _ from 'lodash';
+import boardSnapshot from '@/utils/boardSnapshot';
 
 export class BoardsCrud extends DbCrud<BoardDoc> {
   constructor(dbInstance: DbInstance) {
@@ -11,7 +14,21 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
     return this.getAll({ author: authorId }, {
       sort: {
         createdAt: -1
-      }
+      },
+      projection: {
+        snapshot: 0,
+      },
+    });
+  }
+
+  public async getSharedBoards(boardIds: string[]) {
+    return this.getAll({ _id: { $in: _.map(boardIds, bid => new ObjectId(bid)) } }, {
+      sort: {
+        createdAt: -1
+      },
+      projection: {
+        snapshot: 0,
+      },
     });
   }
 
@@ -22,6 +39,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       createdAt: new Date(),
       updatedAt: new Date(),
       modifiedBy: null,
+      snapshot: boardSnapshot,
     });
   }
 
@@ -31,5 +49,13 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
 
   public async setCustomThumbnail(boardId: string, customThumbnail: boolean, modifiedBy: string) {
     return this.updateOne({ id: boardId, customThumbnail, modifiedBy });
+  }
+
+  public async updateSnapshot(boardId: string, snapshot: BoardDoc['snapshot'], modifiedBy: string) {
+    return this.updateOne({
+      id: boardId,
+      snapshot,
+      modifiedBy,
+    })
   }
 }

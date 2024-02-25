@@ -8,4 +8,8 @@ export interface CreateBoardPayload {
 export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   customThumbnail: boolean,
   modifiedBy: string | null,
+  snapshot: {
+    store: Record<string, any>,
+    schema: Record<string, any>,
+  },
 };

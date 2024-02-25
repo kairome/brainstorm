@@ -21,6 +21,16 @@ export class UsersCrud extends DbCrud<UserDoc> {
       ...data,
       createdAt: new Date(),
       updatedAt: new Date(),
+      boards: [],
+      favoriteBoards: [],
+    });
+  }
+
+  public async addBoard(userId: string, boardId: string) {
+    return this.updateOneRaw({ id: userId }, {
+      $push: {
+        boards: boardId as any,
+      },
     });
   }
 }

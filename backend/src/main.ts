@@ -38,6 +38,8 @@ _.forEach(routes, (router, key) => {
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401).send();
+    next(err);
+    return;
   }
 
   console.error('Internal server error: ', err);

@@ -6,4 +6,14 @@ export interface CreateUserPayload {
   passwordHash: string,
 }
 
-export type UserDoc = CreateUserPayload & TimeStampDocument;
+export type UserDoc = CreateUserPayload & TimeStampDocument & {
+  boards: string[],
+  favoriteBoards: string[],
+};
+
+export interface WsUser {
+  id: string,
+  email: string | null,
+  name: string,
+  isAnonymous: boolean,
+}

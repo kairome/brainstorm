@@ -6,6 +6,8 @@ dotenv.config();
 
 export const PORT = process.env.PORT || 3000;
 
+export const WS_PORT = process.env.WS_PORT || 3434;
+
 export const DB_CONNECTION = process.env.DB_CONNECTION ?? '';
 
 export const SECRET_KEY = process.env.SECRET_KEY ?? randomBytes(20).toString('hex')

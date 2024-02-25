@@ -16,8 +16,16 @@ router.post('', asyncHandler(async (req: JwtRequest, res) => {
 }));
 
 router.get('', asyncHandler(async (req: JwtRequest, res) => {
-  const boards = await db.boardsCrud.getByAuthor(req.auth!.userId);
-  res.json(boards);
+  const userId = req.auth!.userId;
+  const user = await db.userCrud.getUserById(userId)
+
+  if (!user) {
+    return new BadRequestException({ message: 'User not found' }).throw(res);
+  }
+
+  const ownBoards = await db.boardsCrud.getByAuthor(userId);
+  const sharedBoards = _.isEmpty(user.boards) ? [] : await db.boardsCrud.getSharedBoards(user.boards);
+  res.json(_.concat(ownBoards, sharedBoards));
 }));
 
 router.get('/:id', asyncHandler(async (req: JwtRequest, res) => {

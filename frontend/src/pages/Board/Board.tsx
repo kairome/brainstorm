@@ -16,6 +16,7 @@ import { fetchUser } from 'api/user';
 import { User } from 'types/user';
 import { appHeaderState } from 'store/app';
 import CustomControlPanel from 'pages/Board/CustomControlPanel';
+import useWsBoard from 'utils/useWsBoard';
 
 import s from './Board.module.css';
 
@@ -26,6 +27,8 @@ const Board: React.FC = () => {
 
   const queryClient = useQueryClient();
   const user = queryClient.getQueryData<User>([fetchUser.name]);
+
+  const store = useWsBoard((boardId as string));
 
   const setAppHeader = useSetRecoilState(appHeaderState);
 
@@ -42,7 +45,7 @@ const Board: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      setUserPreferences({ id: user._id, isDarkMode: theme === 'dark' });
+      setUserPreferences({ id: user._id, isDarkMode: theme === 'dark', name: user.name });
     }
   }, [user, theme]);
 
@@ -87,9 +90,10 @@ const Board: React.FC = () => {
   return (
     <div className={s.canvas}>
       <Tldraw
-        persistenceKey={boardId}
         onMount={handleBoardMount}
         overrides={overrides}
+        store={store}
+        autoFocus
       >
         <CustomControlPanel
           boardTitle={board.title}

@@ -1,5 +1,5 @@
 import { DbInstance } from './index';
-import { Collection, Document, Filter, FindOptions, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
+import { Collection, Document, Filter, FindOptions, ObjectId, OptionalUnlessRequiredId, UpdateFilter } from 'mongodb';
 
 export class DbCrud<T extends Document> {
   private readonly collection: Collection<T>;
@@ -29,6 +29,10 @@ export class DbCrud<T extends Document> {
     return this.collection.updateOne({ _id: new ObjectId(doc.id) } as any, {
       $set: { ...doc, updatedAt: new Date() },
     });
+  }
+
+  protected async updateOneRaw(doc: Partial<T> & { id: string }, updateOptions: UpdateFilter<T>) {
+    return this.collection.updateOne({ _id: new ObjectId(doc.id) } as any, updateOptions);
   }
 }
 
