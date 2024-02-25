@@ -1,5 +1,5 @@
 
-export interface Board {
+export interface BoardItem {
   _id: string,
   title: string,
   customThumbnail: boolean,

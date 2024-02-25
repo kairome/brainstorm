@@ -125,7 +125,9 @@ const useWsBoard = (boardId: string) => {
       switch (data.type) {
         case 'init':
         case 'recovery': {
-          store.loadSnapshot(data.snapshot);
+          if (data.snapshot) {
+            store.loadSnapshot(data.snapshot);
+          }
           break;
         }
         case 'update': {

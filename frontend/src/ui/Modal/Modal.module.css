@@ -1,0 +1,71 @@
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s linear;
+  z-index: 1000;
+}
+
+.modalCover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.29);
+}
+
+.modalBody {
+  background: var(--card-bg);
+  border-radius: 5px;
+  padding: 10px 20px 15px;
+  min-width: 320px;
+  max-width: 540px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.modalTitle {
+  margin: 0;
+}
+
+.modalClose {
+  flex-shrink: 0;
+  font-size: 40px;
+  padding: 5px;
+  box-sizing: border-box;
+  transition: all .2s linear;
+  margin-right: -10px;
+
+  cursor: pointer;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--context-action-bg);
+  }
+}
+
+.confirmationText {
+  font-size: 16px;
+}
+
+.confirmationBtns {
+  display: flex;
+  margin-top: 40px;
+  align-items: flex-end;
+  margin-left: auto;
+  column-gap: 20px;
+  justify-content: flex-end;
+}

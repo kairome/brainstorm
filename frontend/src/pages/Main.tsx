@@ -11,9 +11,13 @@ import { IoIosLogOut } from 'react-icons/io';
 import { MdOutlineManageAccounts } from 'react-icons/md';
 
 import s from './Main.module.css';
+import { useSetRecoilState } from 'recoil';
+import { userState } from 'store/user';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
+
+  const setUser = useSetRecoilState(userState);
 
   const { refetch: loadUser, data: user, isLoading } = useQuery({
     queryKey: [fetchUser.name],
@@ -32,6 +36,12 @@ const Main: React.FC = () => {
       loadUser();
     }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setUser(user);
+    }
+  }, [user]);
 
   const handleLogout = () => {
     deleteFromLs('token');

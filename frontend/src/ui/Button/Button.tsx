@@ -7,7 +7,8 @@ import s from './Button.module.css';
 interface Props {
   children: React.ReactNode,
   type?: 'button' | 'submit',
-  theme?: 'primary' | 'outline' | 'underline',
+  theme?: 'primary' | 'danger',
+  appearance?: 'default' | 'outline' | 'underline',
   size?: 'sm',
   onClick?: () => void,
   className?: string,
@@ -26,11 +27,14 @@ const Button: React.FC<Props> = (props) => {
     loading,
     disabled,
     size,
+    appearance = 'default',
   } = props;
 
+  const isUnderline = appearance === 'underline';
   const btnClasses = classNames(s.button, className, {
     [s.buttonPrimary]: theme === 'primary',
-    [s.buttonUnderline]: theme === 'underline',
+    [s.buttonDanger]: theme === 'danger',
+    [s.buttonUnderline]: isUnderline,
     [s.buttonFullWidth]: fullWidth,
     [s.btnSm]: size === 'sm',
   });
@@ -42,7 +46,7 @@ const Button: React.FC<Props> = (props) => {
       onClick={props.onClick}
       disabled={loading || disabled}
     >
-      {loading ? (<Loader size="xs" className={s.btnLoader} />) : null}
+      {loading ? (<Loader size={isUnderline ? 'xss' : 'xs'} className={s.btnLoader} />) : null}
       {children}
     </button>
   );

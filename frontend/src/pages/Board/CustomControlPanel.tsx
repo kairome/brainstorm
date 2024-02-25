@@ -7,15 +7,19 @@ import { useMutation } from '@tanstack/react-query';
 import { updateBoard } from 'api/boards';
 import { useNavigate } from 'react-router-dom';
 import SetThumbnail from 'pages/Board/controlPanels/SetThumbnail';
+import { User } from 'types/user';
+import { BoardItem } from 'types/boards';
 
 interface Props {
-  boardTitle: string,
-  boardId: string,
+  user: User,
+  board: BoardItem,
   loadBoard: () => void,
 }
 
 const CustomControlPanel: React.FC<Props> = (props) => {
-  const { boardId, boardTitle } = props;
+  const { board, user } = props;
+
+  const isOwnBoard = board.author === user._id;
 
   const navigate = useNavigate();
 
@@ -32,9 +36,34 @@ const CustomControlPanel: React.FC<Props> = (props) => {
 
   const handleSaveTitle = (value: string) => {
     updateTitle({
-      id: boardId,
+      id: board._id,
       title: value,
     });
+  };
+
+  const renderShareButton = () => {
+    if (!isOwnBoard) {
+      return null;
+    }
+
+    return (
+      <Button
+        size="sm"
+        onClick={handleShare}
+      >
+        Share
+      </Button>
+    );
+  };
+
+  const renderThumbnailAction = () => {
+    if (!isOwnBoard) {
+      return null;
+    }
+
+    return (
+      <SetThumbnail boardId={board._id} />
+    );
   };
 
   return (
@@ -45,17 +74,13 @@ const CustomControlPanel: React.FC<Props> = (props) => {
           onClick={() => navigate('/')}
         />
         <InlineInput
-          initialValue={boardTitle}
+          initialValue={board.title}
           onSave={handleSaveTitle}
+          canEdit={isOwnBoard}
         />
-        <Button
-          size="sm"
-          onClick={handleShare}
-        >
-          Share
-        </Button>
+        {renderShareButton()}
       </div>
-      <SetThumbnail boardId={boardId} />
+      {renderThumbnailAction()}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { apiRequest } from 'api/client';
-import { Board } from 'types/boards';
+import { BoardItem } from 'types/boards';
 
 const fetchBoard = async (id: string) => {
-  const resp = await apiRequest.get<Board>(`boards/${id}`);
+  const resp = await apiRequest.get<BoardItem>(`boards/${id}`);
   return resp.data;
 };
 

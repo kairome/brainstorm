@@ -29,7 +29,7 @@ const BoardsPage: React.FC = () => {
     },
   });
 
-  const { data: boards, isLoading: boardsLoading } = useQuery({
+  const { data: boards, isLoading: boardsLoading, refetch: loadBoards } = useQuery({
     queryKey: [fetchBoards.name],
     queryFn: fetchBoards.request,
   });
@@ -37,23 +37,29 @@ const BoardsPage: React.FC = () => {
   const renderBoards = () => {
     if (boardsLoading) {
       return (
-        <Loader />
+        <div className={s.loaderContainer}>
+          <Loader />
+        </div>
       );
     }
 
     const boardsList = _.map(boards, (board) => {
       return (
-        <BoardCard key={board._id} board={board} />
+        <BoardCard
+          key={board._id}
+          board={board}
+          loadBoards={loadBoards}
+        />
       );
     });
 
     return (
-      <>
+      <div className={s.boards}>
         <Card className={s.newBoardCard} title="New board" onClick={handleAddBoard}>
           <AddBoardLogo />
         </Card>
         {boardsList}
-      </>
+      </div>
     );
   };
 
@@ -68,9 +74,7 @@ const BoardsPage: React.FC = () => {
   return (
     <>
       <h1 className={commonS.pageTitle}>My boards</h1>
-      <div className={s.boards}>
-        {renderBoards()}
-      </div>
+      {renderBoards()}
     </>
   );
 };

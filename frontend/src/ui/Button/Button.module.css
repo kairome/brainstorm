@@ -1,6 +1,6 @@
 .button {
   height: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px 30px;
   display: flex;
   justify-content: center;
@@ -10,10 +10,19 @@
   border: none;
   cursor: pointer;
   font-size: 21px;
+  transition: filter .2s ease-out;
 
   &:disabled {
-    opacity: .6;
+    opacity: .5;
     cursor: not-allowed;
+
+    &:hover {
+      filter: brightness(1);
+    }
+  }
+
+  &:hover {
+    filter: brightness(0.9);
   }
 }
 
@@ -22,15 +31,37 @@
   color: var(--btn-primary-text);
 }
 
+.buttonDanger {
+  background-color: var(--error);
+  color: var(--btn-primary-text);
+}
+
 .buttonUnderline {
   background: transparent;
-  color: var(--btn-underline);
-  text-decoration: underline;
-  font-size: 16px;
+  text-decoration: none;
+  font-size: 18px;
   font-weight: bold;
   height: fit-content;
   width: fit-content;
   padding: 0;
+  transition: all .2s ease-in;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
+
+  &.buttonPrimary {
+    color: var(--btn-underline);
+
+    &:hover {
+      border-bottom: 1px solid var(--btn-underline);
+    }
+  }
+
+  &.buttonDanger {
+    color: var(--error);
+    &:hover {
+      border-bottom: 1px solid var(--error);
+    }
+  }
 }
 
 .buttonFullWidth {

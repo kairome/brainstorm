@@ -4,6 +4,7 @@ import BoardsPage from 'pages/Boards/BoardsPage';
 import Board from 'pages/Board/Board';
 import TemplatesPage from 'pages/Templates/TemplatesPage';
 import MembersPages from 'pages/Members/MembersPages';
+import NotFound from 'ui/NotFound/NotFound';
 
 import Main from './Main';
 
@@ -36,42 +37,10 @@ export default [
         path: '/',
         element: <BoardsPage />,
       },
-      // {
-      //   path: '/products',
-      //   element: <ProductsPage />,
-      // },
-      // {
-      //   path: '/products/add',
-      //   element: <AddEditProduct />,
-      // },
-      // {
-      //   path: '/products/:productId/edit',
-      //   element: <AddEditProduct />,
-      // },
-      // {
-      //   path: '/products/:productId',
-      //   element: <ProductPage />,
-      // },
-      // {
-      //   path: '/profile',
-      //   element: <ProfilePage />,
-      // },
-      // {
-      //   path: '/register-product',
-      //   element: <RegisterProductPage />,
-      // },
-      // {
-      //   path: '/register-product/:productId',
-      //   element: <RegisterProductPage />,
-      // },
-      // {
-      //   path: '/history/:productId',
-      //   element: <HistoryPage />,
-      // },
-      // {
-      //   path: '*',
-      //   element: <NotFoundPage />,
-      // },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
   },
 ];

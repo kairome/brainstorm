@@ -18,21 +18,30 @@ export class DbCrud<T extends Document> {
   }
 
   public async getOneById(id: string, options?: FindOptions<T>) {
-    return this.collection.findOne({ _id: new ObjectId(id) } as any, options);
+    try {
+      return this.collection.findOne({ _id: new ObjectId(id) } as any, options);
+    } catch (e) {
+      return null;
+    }
   }
 
   protected async createOne(doc: OptionalUnlessRequiredId<T>) {
     return await this.collection.insertOne(doc);
   }
 
-  protected async updateOne(doc: Partial<T> & { id: string }) {
-    return this.collection.updateOne({ _id: new ObjectId(doc.id) } as any, {
-      $set: { ...doc, updatedAt: new Date() },
+  protected async updateOne(doc: Partial<T>) {
+    const { _id, ...data } = doc;
+    return this.collection.updateOne({ _id: new ObjectId(_id) } as any, {
+      $set: { ...(data as Partial<T>), updatedAt: new Date() },
     });
   }
 
-  protected async updateOneRaw(doc: Partial<T> & { id: string }, updateOptions: UpdateFilter<T>) {
-    return this.collection.updateOne({ _id: new ObjectId(doc.id) } as any, updateOptions);
+  public async deleteOne(id: string) {
+    return this.collection.deleteOne({ _id: new ObjectId(id) as any });
+  }
+
+  protected async updateOneRaw(doc: Partial<T>, updateOptions: UpdateFilter<T>) {
+    return this.collection.updateOne({ _id: new ObjectId(doc._id) } as any, updateOptions);
   }
 }
 

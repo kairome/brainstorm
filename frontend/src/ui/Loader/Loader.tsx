@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import s from './Loader.module.css';
 
 interface Props {
-  size?: 'lg' | 'sm' | 'xs',
+  size?: 'lg' | 'sm' | 'xs' | 'xss',
   className?: string,
 }
 
@@ -14,6 +14,7 @@ const Loader: React.FC<Props> = (props) => {
     [s.lg]: size === 'lg',
     [s.sm]: size === 'sm',
     [s.xs]: size === 'xs',
+    [s.xss]: size === 'xss',
   });
   return (
     <div className={classes} />

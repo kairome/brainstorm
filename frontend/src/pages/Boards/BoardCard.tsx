@@ -1,27 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Card from 'ui/Card/Card';
 import s from 'pages/Boards/Boards.module.css';
-import { Board } from 'types/boards';
+import { BoardItem } from 'types/boards';
 import DefaultThumbnail from 'assets/defaultThumbnail.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBoardThumbnail } from 'api/boards';
 import Loader from 'ui/Loader/Loader';
 import { IoIosStarOutline, IoIosStar } from 'react-icons/io';
-import { IoEllipsisVertical, IoShareSocial, IoTrashOutline, IoSaveOutline, IoPersonAdd } from 'react-icons/io5';
 import contextMenuS from 'ui/ContextMenu/ContextMenu.module.css';
 import classNames from 'classnames';
-import ContextMenu from 'ui/ContextMenu/ContextMenu';
 import { Tooltip } from 'react-tooltip';
 import { DateTime } from 'luxon';
+import { useRecoilValue } from 'recoil';
+import { userState } from 'store/user';
+import BoardCardActions from 'pages/Boards/BoardCardActions';
 
 interface Props {
-  board: Board,
+  board: BoardItem,
+  loadBoards: () => void,
 }
 
 const BoardCard: React.FC<Props> = (props) => {
   const navigate = useNavigate();
   const { board } = props;
+
+  const user = useRecoilValue(userState);
+
+  const isOwner = user ? user._id === board.author : false;
 
   const { data: thumbnail, isLoading, refetch: loadThumbnail } = useQuery({
     queryKey: [fetchBoardThumbnail.name, board._id],
@@ -35,7 +41,9 @@ const BoardCard: React.FC<Props> = (props) => {
     }
   }, [board.customThumbnail]);
 
-  const handleSetFavorite = () => {
+  const handleSetFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     const nextFav = !board.isFavorite;
     console.log('set to fav ', nextFav);
   };
@@ -54,7 +62,6 @@ const BoardCard: React.FC<Props> = (props) => {
         <img
           src={thumbnail}
           className={s.thumbnail}
-          onClick={() => navigate(`/boards/${board._id}`)}
         />
       );
     }
@@ -82,38 +89,6 @@ const BoardCard: React.FC<Props> = (props) => {
     );
   };
 
-  const boardActions = [
-    {
-      title: 'Share',
-      icon: <IoShareSocial />,
-      onClick: () => {
-        console.log('share');
-      },
-    },
-    {
-      title: 'Invite to board',
-      icon: <IoPersonAdd />,
-      onClick: () => {
-        console.log('invite');
-      },
-    },
-    {
-      title: 'Save as template',
-      icon: <IoSaveOutline />,
-      onClick: () => {
-        console.log('save as template');
-      },
-    },
-    {
-      title: 'Delete',
-      icon: <IoTrashOutline />,
-      className: s.removeAction,
-      onClick: () => {
-        console.log('deleting');
-      },
-    },
-  ];
-
   const updatedAt = DateTime.fromISO(board.updatedAt);
   const dateCutOff = DateTime.now().minus({ day: 1 });
   const updatedDate = dateCutOff < updatedAt ?
@@ -123,12 +98,12 @@ const BoardCard: React.FC<Props> = (props) => {
   return (
     <Card
       className={s.boardCard}
+      onClick={() => navigate(`/boards/${board._id}`)}
     >
       <div className={s.boardContent}>
         <div className={s.boardHeader}>
           <h2
             data-tooltip-id={`${board._id}-title`}
-            onClick={() => navigate(`/boards/${board._id}`)}
           >
             {board.title}
           </h2>
@@ -141,15 +116,11 @@ const BoardCard: React.FC<Props> = (props) => {
           />
           <div className={s.boardHeaderControls}>
             {renderFavIcon()}
-            <ContextMenu
-              id={`board${board._id}-cardActions`}
-              actions={boardActions}
-              place="bottom-end"
-            >
-              <IoEllipsisVertical
-                className={s.boardActionsIcon}
-              />
-            </ContextMenu>
+            <BoardCardActions
+              boardId={board._id}
+              isOwner={isOwner}
+              onSuccess={props.loadBoards}
+            />
           </div>
         </div>
         <div className={s.boardStatus}>

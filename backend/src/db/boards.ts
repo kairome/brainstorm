@@ -44,16 +44,16 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
   }
 
   public async setTitle(boardId: string, title: string, modifiedBy: string) {
-    return this.updateOne({ id: boardId, title, modifiedBy });
+    return this.updateOne({ _id: boardId, title, modifiedBy });
   }
 
   public async setCustomThumbnail(boardId: string, customThumbnail: boolean, modifiedBy: string) {
-    return this.updateOne({ id: boardId, customThumbnail, modifiedBy });
+    return this.updateOne({ _id: boardId, customThumbnail, modifiedBy });
   }
 
   public async updateSnapshot(boardId: string, snapshot: BoardDoc['snapshot'], modifiedBy: string) {
     return this.updateOne({
-      id: boardId,
+      _id: boardId,
       snapshot,
       modifiedBy,
     })

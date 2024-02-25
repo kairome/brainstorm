@@ -27,7 +27,7 @@ export class UsersCrud extends DbCrud<UserDoc> {
   }
 
   public async addBoard(userId: string, boardId: string) {
-    return this.updateOneRaw({ id: userId }, {
+    return this.updateOneRaw({ _id: userId }, {
       $push: {
         boards: boardId as any,
       },

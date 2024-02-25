@@ -9,6 +9,7 @@ interface Action {
   title: string,
   onClick: () => void,
   icon: React.ReactNode,
+  forbidden?: boolean,
   className?: string,
 }
 
@@ -34,7 +35,13 @@ const ContextMenu: React.FC<Props> = (props) => {
 
   const renderActions = () => {
     return _.map(props.actions, (action) => {
-      const handleClick = () => {
+      if (action.forbidden) {
+        return null;
+      }
+
+      const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
         setShowActions(false);
         action.onClick();
       };
@@ -53,6 +60,7 @@ const ContextMenu: React.FC<Props> = (props) => {
 
   const handleTriggerClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setShowActions(!showActions);
   };
 

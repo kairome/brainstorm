@@ -48,7 +48,7 @@ const PasswordInput: React.FC<Props> = (props) => {
     }
 
     return (
-      <Button theme="underline" onClick={handleGenPassword}>
+      <Button appearance="underline" onClick={handleGenPassword}>
         Generate strong password
       </Button>
     );

@@ -1,5 +1,5 @@
 import { apiRequest } from 'api/client';
-import { Board } from 'types/boards';
+import { BoardItem } from 'types/boards';
 
 interface Payload {
   id: string,
@@ -9,7 +9,7 @@ interface Payload {
 
 const updateBoard = async (payload: Payload) => {
   const { id, ...rest } = payload;
-  const resp = await apiRequest.patch<Board>(`/boards/${id}`, rest);
+  const resp = await apiRequest.patch<BoardItem>(`/boards/${id}`, rest);
   return resp.data;
 };
 

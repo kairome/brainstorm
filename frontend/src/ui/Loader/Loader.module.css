@@ -22,6 +22,11 @@
     width: 25px;
     height: 25px;
   }
+
+  &.xss {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 @keyframes rotation {

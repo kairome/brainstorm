@@ -1,6 +1,6 @@
 .content {
-  max-width: 1280px;
   padding: 130px 50px 100px;
+  box-sizing: border-box;
 }
 
 .loaderWrapper {

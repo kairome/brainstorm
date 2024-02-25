@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { fetchBoard } from 'api/boards';
 import Loader from 'ui/Loader/Loader';
 import {
@@ -12,11 +12,11 @@ import {
 } from '@tldraw/tldraw';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { themeState } from 'store/theme';
-import { fetchUser } from 'api/user';
-import { User } from 'types/user';
 import { appHeaderState } from 'store/app';
 import CustomControlPanel from 'pages/Board/CustomControlPanel';
 import useWsBoard from 'utils/useWsBoard';
+import { userState } from 'store/user';
+import NotFound from 'ui/NotFound/NotFound';
 
 import s from './Board.module.css';
 
@@ -25,8 +25,7 @@ const Board: React.FC = () => {
 
   const theme = useRecoilValue(themeState);
 
-  const queryClient = useQueryClient();
-  const user = queryClient.getQueryData<User>([fetchUser.name]);
+  const user = useRecoilValue(userState);
 
   const store = useWsBoard((boardId as string));
 
@@ -49,18 +48,19 @@ const Board: React.FC = () => {
     }
   }, [user, theme]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
-      <Loader />
+      <div className={s.noContentContainer}>
+        <Loader />
+      </div>
     );
   }
 
   if (!board) {
     return (
-      <div>
-        No such board found :(
-        <Link to="/">Go back to all boards</Link>
-      </div>
+      <NotFound
+        text="Board not found"
+      />
     );
   }
 
@@ -96,8 +96,8 @@ const Board: React.FC = () => {
         autoFocus
       >
         <CustomControlPanel
-          boardTitle={board.title}
-          boardId={board._id}
+          user={user}
+          board={board}
           loadBoard={loadBoard}
         />
       </Tldraw>

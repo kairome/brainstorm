@@ -7,11 +7,12 @@ import s from './Input.module.css';
 interface Props {
   initialValue: string,
   onSave: (v: string) => void,
+  canEdit?: boolean,
   className?: string,
 }
 
 const InlineInput: React.FC<Props> = (props) => {
-  const { initialValue, className } = props;
+  const { initialValue, className, canEdit } = props;
   const [internalValue, setInternalValue] = useState(initialValue);
 
   const handleBlur = () => {
@@ -38,9 +39,14 @@ const InlineInput: React.FC<Props> = (props) => {
     }
   };
 
-  return (
-    <div className={classNames(s.inlineInputContainer, className)}>
-      <CiEdit />
+  const renderInput = () => {
+    if (!canEdit) {
+      return (
+        <div className={s.inlineInput}>{initialValue}</div>
+      );
+    }
+
+    return (
       <input
         value={internalValue}
         onChange={handleChange}
@@ -48,6 +54,16 @@ const InlineInput: React.FC<Props> = (props) => {
         onKeyDown={handleKeyDown}
         className={s.inlineInput}
       />
+    );
+  };
+
+  const containerClasses = classNames(s.inlineInputContainer, className, {
+    [s.editable]: canEdit,
+  });
+  return (
+    <div className={containerClasses}>
+      {canEdit ? (<CiEdit />) : null}
+      {renderInput()}
     </div>
   );
 };

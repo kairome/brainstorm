@@ -9,7 +9,7 @@
   transition: .2s linear all;
 
   &:hover {
-    background-color: var(--board-control-icon-bg);
+    background-color: var(--hover-primary-bg);
   }
 }
 
