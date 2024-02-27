@@ -26,11 +26,21 @@ export class UsersCrud extends DbCrud<UserDoc> {
     });
   }
 
-  public async addBoard(userId: string, boardId: string) {
-    return this.updateOneRaw({ _id: userId }, {
-      $push: {
-        boards: boardId as any,
-      },
-    });
+  public async setBoardFavorite(userId: string, boardId: string, adding: boolean = true) {
+    const update = adding ? {
+      $push: { favoriteBoards: boardId },
+    } : {
+      $pull: { favoriteBoards: boardId }
+    };
+    return this.updateOneRaw({ _id: userId }, update as any);
+  }
+
+  public async setBoard(userId: string, boardId: string, adding: boolean = true) {
+    const update = adding ? {
+      $push: { boards: boardId },
+    } : {
+      $pull: { boards: boardId }
+    };
+    return this.updateOneRaw({ _id: userId }, update as any);
   }
 }

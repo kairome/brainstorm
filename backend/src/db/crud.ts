@@ -29,10 +29,18 @@ export class DbCrud<T extends Document> {
     return await this.collection.insertOne(doc);
   }
 
-  protected async updateOne(doc: Partial<T>) {
+  protected async updateOne(doc: Partial<T>, updateDate: boolean = true) {
     const { _id, ...data } = doc;
+    const updateDoc = {
+      ...(data as Partial<T>),
+    };
+
+    if (updateDate) {
+      (updateDoc as any).updatedAt = new Date();
+    }
+
     return this.collection.updateOne({ _id: new ObjectId(_id) } as any, {
-      $set: { ...(data as Partial<T>), updatedAt: new Date() },
+      $set: updateDoc,
     });
   }
 

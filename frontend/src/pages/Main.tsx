@@ -48,7 +48,7 @@ const Main: React.FC = () => {
     navigate('/login');
   };
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className={s.loaderWrapper}>
         <Loader />

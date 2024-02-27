@@ -104,3 +104,55 @@
   display: flex;
   justify-content: center;
 }
+
+.filters {
+  margin-bottom: 40px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filterPill {
+  height: 40px;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 0 15px;
+  background-color: var(--filter-pill-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s all ease-out;
+  user-select: none;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &.pillActive {
+    color: var(--filter-pill-text-acitve);
+    background-color: var(--filter-pill-active-bg);
+  }
+
+  svg {
+    font-size: 25px;
+    margin-right: 5px;
+  }
+}
+
+.filterFavorite {
+  color: #F8B400;
+}
+
+.clearFilters {
+  display: flex;
+  align-items: center;
+  color: var(--error);
+
+  cursor: pointer;
+
+  svg {
+    font-size: 20px;
+  }
+}

@@ -16,6 +16,7 @@ interface Props {
   icon?: React.ReactNode,
   iconPosition?: 'left' | 'right',
   autoComplete?: string,
+  onKeyPress?: (e: React.KeyboardEvent) => void,
   onBlur?: () => void,
 }
 

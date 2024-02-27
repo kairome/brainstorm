@@ -51,6 +51,10 @@ body {
 
   --header-account-bg: #7B52BE;
   --header-account-color: #ECF0F1;
+
+  --filter-pill-bg: #fdfdfd;
+  --filter-pill-active-bg: #7B52BE;
+  --filter-pill-text-acitve: #ECF0F1;
 }
 
 body.dark {
@@ -78,6 +82,10 @@ body.dark {
 
   --header-account-bg: #D3B8FF;
   --header-account-color: #2C3E50;
+
+  --filter-pill-bg: #535151;
+  --filter-pill-active-bg: #D3B8FF;
+  --filter-pill-text-acitve: #2C3E50;
 }
 
 body {

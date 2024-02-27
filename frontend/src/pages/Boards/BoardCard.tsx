@@ -4,8 +4,8 @@ import s from 'pages/Boards/Boards.module.css';
 import { BoardItem } from 'types/boards';
 import DefaultThumbnail from 'assets/defaultThumbnail.svg?react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { fetchBoardThumbnail } from 'api/boards';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { fetchBoardThumbnail, setBoardFavorite } from 'api/boards';
 import Loader from 'ui/Loader/Loader';
 import { IoIosStarOutline, IoIosStar } from 'react-icons/io';
 import contextMenuS from 'ui/ContextMenu/ContextMenu.module.css';
@@ -15,15 +15,18 @@ import { DateTime } from 'luxon';
 import { useRecoilValue } from 'recoil';
 import { userState } from 'store/user';
 import BoardCardActions from 'pages/Boards/BoardCardActions';
+import { useNotify } from 'store/alert';
 
 interface Props {
   board: BoardItem,
+  toggleFavorite: (bId: string) => void,
   loadBoards: () => void,
 }
 
 const BoardCard: React.FC<Props> = (props) => {
   const navigate = useNavigate();
   const { board } = props;
+  const notify = useNotify();
 
   const user = useRecoilValue(userState);
 
@@ -35,6 +38,20 @@ const BoardCard: React.FC<Props> = (props) => {
     enabled: false,
   });
 
+  const { mutate: setFavorite } = useMutation({
+    mutationFn: setBoardFavorite.request,
+    onSuccess: () => {
+      props.toggleFavorite(board._id);
+    },
+    onError: () => {
+      notify({
+        type: 'error',
+        message: 'Could not set the board to favorite',
+      });
+      props.toggleFavorite(board._id);
+    },
+  });
+
   useEffect(() => {
     if (board.customThumbnail) {
       loadThumbnail();
@@ -44,8 +61,7 @@ const BoardCard: React.FC<Props> = (props) => {
   const handleSetFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    const nextFav = !board.isFavorite;
-    console.log('set to fav ', nextFav);
+    setFavorite(board._id);
   };
 
   const renderThumbnail = () => {

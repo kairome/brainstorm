@@ -1,8 +1,10 @@
 import { apiRequest } from 'api/client';
-import { BoardItem } from 'types/boards';
+import { BoardFiltersPayload, BoardItem } from 'types/boards';
 
-const fetchBoards = async () => {
-  const resp = await apiRequest.get<BoardItem[]>('boards');
+const fetchBoards = async (filters: BoardFiltersPayload) => {
+  const resp = await apiRequest.get<BoardItem[]>('boards', {
+    params: filters,
+  });
   return resp.data;
 };
 

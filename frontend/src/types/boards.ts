@@ -1,4 +1,3 @@
-
 export interface BoardItem {
   _id: string,
   title: string,
@@ -8,4 +7,10 @@ export interface BoardItem {
   updatedAt: string,
   modifiedBy: string,
   isFavorite: boolean,
+}
+
+export interface BoardFiltersPayload {
+  search?: string,
+  isFavorite?: boolean,
+  board?: 'my' | 'shared',
 }
