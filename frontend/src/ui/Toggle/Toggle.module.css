@@ -4,6 +4,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  cursor: pointer;
 
   input {
     width: 0;
@@ -38,6 +39,12 @@
     background-color: white;
     transition: .4s;
   }
+}
+
+.disabled {
+  opacity: .7;
+  filter: grayscale(0.7);
+  cursor: not-allowed;
 }
 
 .checked {

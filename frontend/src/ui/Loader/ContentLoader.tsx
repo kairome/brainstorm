@@ -1,5 +1,6 @@
 import React from 'react';
 import Loader from 'ui/Loader/Loader';
+
 import s from './Loader.module.css';
 
 interface Props {

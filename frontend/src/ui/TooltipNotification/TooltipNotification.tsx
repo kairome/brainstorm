@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Tooltip } from 'react-tooltip';
+import { PlacesType, Tooltip } from 'react-tooltip';
 import { TooltipNotificationState } from 'types/alert';
 
 import s from './TooltipNotification.module.css';
@@ -7,12 +7,13 @@ import s from './TooltipNotification.module.css';
 interface Props {
   id: string,
   notification: TooltipNotificationState | null,
+  place?: PlacesType,
   delay?: number,
   onClose: () => void,
 }
 
 const TooltipNotification: React.FC<Props> = (props) => {
-  const { notification, delay } = props;
+  const { notification, delay, place } = props;
 
   useEffect(() => {
     if (notification) {
@@ -33,6 +34,7 @@ const TooltipNotification: React.FC<Props> = (props) => {
       variant={notification?.variant}
       isOpen
       className={s.tooltip}
+      place={place}
       noArrow
     />
   );

@@ -24,6 +24,10 @@ type WsClient = WebSocket & {
   isAlive: boolean,
 }
 
+type WsBoard = BoardDoc & {
+  isPublic: boolean,
+}
+
 const boardRecords = new Map<string, BoardRecord>();
 
 const boardWs = new WebSocketServer({ noServer: true });
@@ -79,11 +83,33 @@ const sendRecovery = (socket: WebSocket, snapshot: object) => {
   }));
 };
 
+const getUserCanEditBoard = (user: WsUser, board: WsBoard) => {
+  if (board.isPublic) {
+    const { anonUsers, registeredUsers } = board.publicPermissions;
+
+    return (user.isAnonymous && anonUsers.canEdit) || (!user.isAnonymous && registeredUsers.canEdit);
+  }
+
+  if (user.isAnonymous) {
+    return false;
+  }
+
+  if (user.id === board.author) {
+    return true;
+  }
+
+  const invited = _.find(user.invitedBoards, b => b.boardId === String(board._id));
+
+  return invited && invited.canEdit;
+};
+
 // adapted from https://github.com/tldraw/tldraw-sockets-example
-const handleMessage = (socket: WebSocket, data: RawData, board: BoardDoc) => {
+const handleMessage = (socket: WebSocket, data: RawData, board: WsBoard, user: WsUser) => {
   try {
     const message = JSON.parse(data.toString());
     const boardRecord = boardRecords.get(board._id.toString());
+
+    const canEdit = getUserCanEditBoard(user, board);
 
     if (!boardRecord) {
       sendRecovery(socket, board.snapshot);
@@ -94,7 +120,8 @@ const handleMessage = (socket: WebSocket, data: RawData, board: BoardDoc) => {
       case 'update': {
         try {
           const store = boardRecord.snapshot.store;
-
+          const presenceAdded: Record<string, any> = {};
+          const presenceUpdated: Record<string, any> = {};
           // go through all updates
           _.forEach(message.updates, (update: BoardUpdate) => {
             const { added, updated, removed } = update.changes;
@@ -103,8 +130,11 @@ const handleMessage = (socket: WebSocket, data: RawData, board: BoardDoc) => {
             _.forEach(added, (value, key) => {
               // add presence to a separate record
               if (value.typeName !== 'instance_presence') {
-                store[key] = value;
+                if (canEdit) {
+                  store[key] = value;
+                }
               } else {
+                presenceAdded[key] = value;
                 boardRecord.presences.set(key, value);
               }
             });
@@ -114,19 +144,38 @@ const handleMessage = (socket: WebSocket, data: RawData, board: BoardDoc) => {
               const finalValue = value[1];
               // update presence separately
               if (finalValue.typeName !== 'instance_presence') {
-                store[key] = finalValue; // updates are an array of 2 elements, last one is the final update
+                if (canEdit) {
+                  store[key] = finalValue; // updates are an array of 2 elements, last one is the final update
+                }
               } else {
+                presenceUpdated[key] = value;
                 boardRecord.presences.set(key, finalValue);
               }
             });
 
             // remove shape
             _.forEach(removed, (value, key) => {
-              delete store[key];
+              if (canEdit) {
+                delete store[key];
+              }
             });
           });
 
-          broadcastToBoardClients(boardRecord.clients, socket, data.toString());
+          const broadcastMessage = canEdit ? data.toString() : JSON.stringify({
+            type: 'update',
+            updates: [
+              {
+                changes: {
+                  added: presenceAdded,
+                  updated: presenceUpdated,
+                  removed: {},
+                },
+                source: 'user',
+              },
+            ]
+          });
+
+          broadcastToBoardClients(boardRecord.clients, socket, broadcastMessage);
         } catch (err) {
           console.error('Error merging updates: ', err);
           sendRecovery(socket, boardRecord.snapshot);
@@ -160,7 +209,7 @@ const pingInterval = setInterval(() => {
   });
 }, 30000);
 
-boardWs.on('connection', async (socket: WsClient, board: BoardDoc, user: WsUser) => {
+boardWs.on('connection', async (socket: WsClient, board: WsBoard, user: WsUser) => {
   const boardId = String(board._id);
 
   socket.isAlive = true;
@@ -205,7 +254,7 @@ boardWs.on('connection', async (socket: WsClient, board: BoardDoc, user: WsUser)
   }
 
   socket.on('close', () => handleCloseConnection(socket, boardId, user));
-  socket.on('message', (data) => handleMessage(socket, data, board));
+  socket.on('message', (data) => handleMessage(socket, data, board, user));
 });
 
 boardWs.on('close', () => {

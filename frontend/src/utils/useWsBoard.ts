@@ -18,18 +18,25 @@ import _ from 'lodash';
 
 const url = `${import.meta.env.VITE_WS_URL}/board`;
 
-const useWsBoard = (boardId: string) => {
+const useWsBoard = (boardId: string, isPublic?: boolean, anonUserId?: string) => {
   const { readyState, lastJsonMessage, sendJsonMessage } = useWebSocket(`${url}/${boardId}`, {
     share: true,
     retryOnError: true,
-    shouldReconnect: () => true,
+    shouldReconnect: () => {
+      return isPublic ? Boolean(boardId) : true;
+    },
     onError: (err) => {
       console.error('Error connecting to board: ', err);
+      setInitialized(false);
     },
     queryParams: {
       token: getFromLs('token'),
+      isPublic: String(isPublic ?? 'false'),
+      anonUserId: isPublic && anonUserId ? anonUserId : '',
     },
-  });
+  }, Boolean(boardId));
+
+  const [initialized, setInitialized] = useState(false);
 
   const [store] = useState(() => {
     return createTLStore({
@@ -73,7 +80,7 @@ const useWsBoard = (boardId: string) => {
     const computedUserPreference = computed('userPreference', () => {
       return {
         id: user.id,
-        name: user.name as string,
+        name: user.name ?? 'Anonymous',
         color: user.color ?? defaultUserPreferences.color,
       };
     });
@@ -124,6 +131,11 @@ const useWsBoard = (boardId: string) => {
 
       switch (data.type) {
         case 'init':
+          if (data.snapshot) {
+            store.loadSnapshot(data.snapshot);
+          }
+          setInitialized(true);
+          break;
         case 'recovery': {
           if (data.snapshot) {
             store.loadSnapshot(data.snapshot);
@@ -162,7 +174,7 @@ const useWsBoard = (boardId: string) => {
     }
   }, [lastJsonMessage]);
 
-  return store;
+  return { store, initialized };
 };
 
 export default useWsBoard;

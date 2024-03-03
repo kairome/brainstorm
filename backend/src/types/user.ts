@@ -1,4 +1,5 @@
 import { TimeStampDocument } from '@/types/entities';
+import { InvitedBoard } from '@/types/boards';
 
 export interface CreateUserPayload {
   name: string,
@@ -7,13 +8,22 @@ export interface CreateUserPayload {
 }
 
 export type UserDoc = CreateUserPayload & TimeStampDocument & {
-  boards: string[],
+  invitedBoards: InvitedBoard[],
   favoriteBoards: string[],
 };
 
-export interface WsUser {
+export interface WsAnonUser {
   id: string,
-  email: string | null,
+  email: null,
   name: string,
-  isAnonymous: boolean,
+  isAnonymous: true,
 }
+
+export type WsFullUser = Partial<UserDoc> & {
+  id: string,
+  email: string,
+  name: string,
+  isAnonymous: false,
+}
+
+export type WsUser = WsFullUser | WsAnonUser;

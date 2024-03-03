@@ -6,6 +6,9 @@ import setBoardThumbnail from './setBoardThumbnail';
 import fetchBoardThumbnail from './fetchBoardThumbnail';
 import deleteBoard from './deleteBoard';
 import setBoardFavorite from './setBoardFavorite';
+import inviteToBoard from './inviteToBoard';
+import updatePublicBoardPerms from './updatePublicBoardPerms';
+import fetchPublicBoard from './fetchPublicBoard';
 
 export {
   addBoard,
@@ -16,4 +19,7 @@ export {
   fetchBoardThumbnail,
   deleteBoard,
   setBoardFavorite,
+  inviteToBoard,
+  updatePublicBoardPerms,
+  fetchPublicBoard,
 };

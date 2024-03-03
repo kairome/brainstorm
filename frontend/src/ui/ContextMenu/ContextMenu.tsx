@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PlacesType, Tooltip } from 'react-tooltip';
 import _ from 'lodash';
 import classNames from 'classnames';
+import { useOnClickOutside } from 'usehooks-ts';
 
 import s from './ContextMenu.module.css';
 
@@ -26,6 +27,10 @@ const ContextMenu: React.FC<Props> = (props) => {
     offset,
   } = props;
   const [showActions, setShowActions] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(menuRef, () => setShowActions(false));
 
   const handleInternalToggle = (shouldOpen: boolean) => {
     if (!shouldOpen && showActions) {
@@ -65,7 +70,7 @@ const ContextMenu: React.FC<Props> = (props) => {
   };
 
   return (
-    <>
+    <div ref={menuRef}>
       <div
         onClick={handleTriggerClick}
         className={s.trigger}
@@ -89,7 +94,7 @@ const ContextMenu: React.FC<Props> = (props) => {
           {renderActions()}
         </div>
       </Tooltip>
-    </>
+    </div>
   );
 };
 

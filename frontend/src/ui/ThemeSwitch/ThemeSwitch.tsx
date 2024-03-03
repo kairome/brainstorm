@@ -7,11 +7,7 @@ import { themeState } from 'store/theme';
 
 import s from './ThemeSwitch.module.css';
 
-interface Props {
-
-}
-
-const ThemeSwitch: React.FC<Props> = () => {
+const ThemeSwitch: React.FC = () => {
   const { isDarkMode } = useDarkMode();
   const [theme, setTheme] = useRecoilState(themeState);
 

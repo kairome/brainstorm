@@ -32,14 +32,17 @@ const Main: React.FC = () => {
       return;
     }
 
-    if (!user) {
-      loadUser();
-    }
+    loadUser();
   }, []);
 
   useEffect(() => {
     if (user) {
       setUser(user);
+      const returnUrl = getFromLs('returnUrl');
+      if (returnUrl) {
+        navigate(returnUrl);
+        deleteFromLs('returnUrl');
+      }
     }
   }, [user]);
 

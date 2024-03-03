@@ -1,9 +1,10 @@
-import { BoardDoc, CreateBoardPayload } from '@/types/boards';
+import { BoardDoc, CreateBoardPayload, PublicBoardPermissions } from '@/types/boards';
 import { DbInstance } from '@/db/index';
 import { DbCrud } from '@/db/crud';
 import { ObjectId } from 'mongodb';
 import _ from 'lodash';
 import boardSnapshot from '@/utils/boardSnapshot';
+import { v4 } from 'uuid';
 
 export class BoardsCrud extends DbCrud<BoardDoc> {
   constructor(dbInstance: DbInstance) {
@@ -40,6 +41,17 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       updatedAt: new Date(),
       modifiedBy: null,
       snapshot: boardSnapshot,
+      publicId: v4(),
+      publicPermissions: {
+        anonUsers: {
+          canView: false,
+          canEdit: false,
+        },
+        registeredUsers: {
+          canView: true,
+          canEdit: false,
+        },
+      },
     });
   }
 
@@ -56,6 +68,25 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       _id: boardId,
       snapshot,
       modifiedBy,
+    })
+  }
+
+  public async setPublicBoardPerms(boardId: string, perms: PublicBoardPermissions) {
+    return this.updateOne({
+      _id: boardId,
+      publicPermissions: perms,
+    });
+  }
+
+  public async getBoardByPublicId(publicId: string) {
+    return this.getOne({
+      publicId,
+    }, {
+      projection: {
+        snapshot: 0,
+        modifiedBy: 0,
+        author: 0,
+      },
     })
   }
 }

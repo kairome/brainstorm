@@ -1,5 +1,6 @@
 import { deleteFromLs, getFromLs } from 'utils/localStorage';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import _ from 'lodash';
 
 const createRequest = (baseURL: string) => {
   const headers = {
@@ -29,7 +30,7 @@ const requestInterceptor = (request: AxiosRequestConfig) => {
 };
 
 const responseErrorInterceptor = (error: AxiosError) => {
-  if (error.response?.status === 401) {
+  if (error.response?.status === 401 && !_.includes(window.location.pathname, '/public-access/board')) {
     deleteFromLs('token');
     window.location.href = '/login';
 

@@ -44,6 +44,7 @@ const getUserFromToken = async (token?: string) => {
     }
 
     return {
+      ...user,
       id: String(user._id),
       name: user.name,
       email: user.email,
@@ -86,8 +87,12 @@ server.on('upgrade', async (request, socket, head) => {
       return;
     }
 
+    if (user.isAnonymous && query.anonUserId) {
+      user.id = query.anonUserId as string;
+    }
+
     boardWs.handleUpgrade(request, socket, head, (ws) => {
-      boardWs.emit('connection', ws, board, user);
+      boardWs.emit('connection', ws, { ...board, isPublic: query.isPublic === 'true' }, user);
     });
   } else {
     socket.destroy();

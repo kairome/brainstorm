@@ -28,6 +28,7 @@ const Button: React.FC<Props> = (props) => {
     disabled,
     size,
     appearance = 'default',
+    ...rest
   } = props;
 
   const isUnderline = appearance === 'underline';
@@ -41,6 +42,7 @@ const Button: React.FC<Props> = (props) => {
 
   return (
     <button
+      {...rest}
       className={btnClasses}
       type={type}
       onClick={props.onClick}

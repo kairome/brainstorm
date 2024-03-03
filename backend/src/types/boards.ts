@@ -5,6 +5,17 @@ export interface CreateBoardPayload {
   author: string,
 }
 
+export interface PublicBoardPermissions {
+  anonUsers: {
+    canEdit: boolean,
+    canView: boolean,
+  },
+  registeredUsers: {
+    canEdit: boolean,
+    canView: boolean,
+  },
+}
+
 export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   customThumbnail: boolean,
   modifiedBy: string | null,
@@ -12,4 +23,11 @@ export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
     store: Record<string, any>,
     schema: Record<string, any>,
   },
+  publicId: string,
+  publicPermissions: PublicBoardPermissions,
 };
+
+export interface InvitedBoard {
+  boardId: string,
+  canEdit: boolean,
+}

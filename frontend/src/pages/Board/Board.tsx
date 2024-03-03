@@ -17,6 +17,7 @@ import CustomControlPanel from 'pages/Board/CustomControlPanel';
 import useWsBoard from 'utils/useWsBoard';
 import { userState } from 'store/user';
 import NotFound from 'ui/NotFound/NotFound';
+import _ from 'lodash';
 
 import s from './Board.module.css';
 
@@ -27,11 +28,11 @@ const Board: React.FC = () => {
 
   const user = useRecoilValue(userState);
 
-  const store = useWsBoard((boardId as string));
+  const { store, initialized } = useWsBoard((boardId as string));
 
   const setAppHeader = useSetRecoilState(appHeaderState);
 
-  const { data: board, isLoading, refetch: loadBoard } = useQuery({
+  const { data: board, isLoading, isFetched, refetch: loadBoard } = useQuery({
     queryKey: [fetchBoard.name, boardId],
     queryFn: () => fetchBoard.request(boardId ?? ''),
   });
@@ -39,7 +40,9 @@ const Board: React.FC = () => {
   useEffect(() => {
     setAppHeader(false);
 
-    return () => setAppHeader(true);
+    return () => {
+      setAppHeader(true);
+    };
   }, []);
 
   useEffect(() => {
@@ -48,15 +51,7 @@ const Board: React.FC = () => {
     }
   }, [user, theme]);
 
-  if (isLoading || !user) {
-    return (
-      <div className={s.noContentContainer}>
-        <Loader />
-      </div>
-    );
-  }
-
-  if (!board) {
+  if (!board && isFetched) {
     return (
       <NotFound
         text="Board not found"
@@ -64,8 +59,23 @@ const Board: React.FC = () => {
     );
   }
 
+  if (isLoading || !user || !initialized || !board) {
+    return (
+      <div className={s.noContentContainer}>
+        <Loader />
+      </div>
+    );
+  }
+
   const handleBoardMount = (editor: Editor) => {
-    editor.updateInstanceState({ isDebugMode: false });
+    const updates: any = { isDebugMode: false };
+
+    const invitedBoard = _.find(user.invitedBoards, b => b.boardId === board._id);
+    if ((!invitedBoard || !invitedBoard.canEdit) && board.author !== user._id) {
+      updates.isReadonly = true;
+    }
+
+    editor.updateInstanceState(updates);
   };
 
   const overrides: TLUiOverrides = {
@@ -93,7 +103,6 @@ const Board: React.FC = () => {
         onMount={handleBoardMount}
         overrides={overrides}
         store={store}
-        autoFocus
       >
         <CustomControlPanel
           user={user}

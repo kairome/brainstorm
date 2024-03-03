@@ -8,18 +8,24 @@ import { AxiosError } from 'axios';
 import { getApiErrors } from 'utils/apiErrors';
 import { useNotify } from 'store/alert';
 import ConfirmationModal from 'ui/Modal/ConfirmationModal';
+import InviteToBoardModal from 'ui/ShareBoard/InviteToBoardModal';
+import ShareBoardModal from 'ui/ShareBoard/ShareBoardModal';
+import { BoardItem } from 'types/boards';
 
 interface Props {
-  boardId: string,
+  board: BoardItem,
   isOwner: boolean,
   onSuccess: () => void,
 }
 
 const BoardCardActions: React.FC<Props> = (props) => {
   const notify = useNotify();
-  const { boardId, isOwner } = props;
+  const { board, isOwner } = props;
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const [showInviteToBoard, setShowInviteToBoard] = useState(false);
+  const [showShareBoard, setShowShareBoard] = useState(false);
 
   const { mutate: deleteBoardRequest, isPending: deleteLoading, isSuccess: deleteSuccess } = useMutation({
     mutationFn: deleteBoard.request,
@@ -46,7 +52,7 @@ const BoardCardActions: React.FC<Props> = (props) => {
       icon: <IoShareSocial />,
       forbidden: !isOwner,
       onClick: () => {
-        console.log('share');
+        setShowShareBoard(true);
       },
     },
     {
@@ -54,7 +60,7 @@ const BoardCardActions: React.FC<Props> = (props) => {
       icon: <IoPersonAdd />,
       forbidden: !isOwner,
       onClick: () => {
-        console.log('invite');
+        setShowInviteToBoard(true);
       },
     },
     {
@@ -78,7 +84,7 @@ const BoardCardActions: React.FC<Props> = (props) => {
   return (
     <>
       <ContextMenu
-        id={`board${boardId}-cardActions`}
+        id={`board${board._id}-cardActions`}
         actions={boardActions}
         place="bottom-end"
       >
@@ -91,9 +97,19 @@ const BoardCardActions: React.FC<Props> = (props) => {
         text="Are you sure you want to delete this board? This action cannot be undone."
         show={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}
-        onConfirm={() => deleteBoardRequest(boardId)}
+        onConfirm={() => deleteBoardRequest(board._id)}
         isLoading={deleteLoading}
         isSuccess={deleteSuccess}
+      />
+      <InviteToBoardModal
+        boardId={board._id}
+        show={showInviteToBoard}
+        onClose={() => setShowInviteToBoard(false)}
+      />
+      <ShareBoardModal
+        board={board}
+        show={showShareBoard}
+        onClose={() => setShowShareBoard(false)}
       />
     </>
   );

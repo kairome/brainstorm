@@ -28,7 +28,7 @@ app.use(
   expressjwt({
     secret: SECRET_KEY,
     algorithms: ['HS256'],
-  }).unless({ path: /auth\/*/ })
+  }).unless({ path: /(auth\/*)|(boards\/public\/*)/ })
 );
 
 _.forEach(routes, (router, key) => {

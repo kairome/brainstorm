@@ -1,0 +1,16 @@
+.loaderWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.canvas {
+  position: fixed;
+  inset: 0;
+
+  :global(.tlui-page-menu__trigger) {
+    display: none;
+  }
+}

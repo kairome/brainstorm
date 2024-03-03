@@ -10,13 +10,13 @@ import asyncHandler from 'express-async-handler';
 const router = express.Router();
 
 router.post('/register', asyncHandler(async (req, res) => {
-  const validationErrors = await validateRegData(req.body);
+  const { errors, data } = await validateRegData(req.body);
 
-  if (validationErrors) {
-    return new ValidationException(validationErrors).throw(res);
+  if (errors) {
+    return new ValidationException(errors).throw(res);
   }
 
-  const { password, name, email } = req.body;
+  const { password, name, email } = data;
 
   const user = await db.userCrud.getUserByEmail(email);
 
@@ -35,10 +35,10 @@ router.post('/register', asyncHandler(async (req, res) => {
 router.post('/login', asyncHandler(async (req, res) => {
   const { password, email } = req.body;
 
-  const validationErrors = await validateLoginData(req.body);
+  const { errors } = await validateLoginData(req.body);
 
-  if (validationErrors) {
-    return new ValidationException(validationErrors).throw(res);
+  if (errors) {
+    return new ValidationException(errors).throw(res);
   }
 
   const user = await db.userCrud.getOne({ email });

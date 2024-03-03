@@ -1,0 +1,54 @@
+.inviteContent {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.inviteEmailField {
+  width: 100%;
+}
+
+.permissionLabel {
+  margin-right: 30px;
+}
+
+.sectionTitle {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.permissionToggle {
+  justify-content: space-between;
+  max-width: 200px;
+  margin-bottom: 10px;
+}
+
+.updateSettingsWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.copyWrapper {
+  display: flex;
+  align-items: flex-end;
+  min-width: 250px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  column-gap: 20px;
+}
+
+.linkInput {
+  min-width: 250px;
+}

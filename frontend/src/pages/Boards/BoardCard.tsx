@@ -133,7 +133,7 @@ const BoardCard: React.FC<Props> = (props) => {
           <div className={s.boardHeaderControls}>
             {renderFavIcon()}
             <BoardCardActions
-              boardId={board._id}
+              board={board}
               isOwner={isOwner}
               onSuccess={props.loadBoards}
             />

@@ -1,11 +1,12 @@
 import express from 'express';
 import db from '@/db';
 import { JwtRequest } from '@/types/auth';
-import { BadRequestException, ForbiddenException } from '@/exceptions';
+import { BadRequestException, ForbiddenException, ValidationException } from '@/exceptions';
 import asyncHandler from 'express-async-handler';
 import _ from 'lodash';
 import { BoardDoc } from '@/types/boards';
 import { UserDoc } from '@/types/user';
+import { validateEmail, validatePublicBoardPermissions } from '@/utils/validations';
 
 const router = express.Router();
 
@@ -50,7 +51,8 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
   }
 
   const ownBoards = await db.boardsCrud.getByAuthor(userId);
-  const sharedBoards = _.isEmpty(user.boards) ? [] : await db.boardsCrud.getSharedBoards(user.boards);
+  const invitedBoardIds = _.map(user.invitedBoards, b => b.boardId);
+  const sharedBoards = _.isEmpty(invitedBoardIds) ? [] : await db.boardsCrud.getSharedBoards(invitedBoardIds);
 
   const allBoards = _.map(_.concat(ownBoards, sharedBoards), (board) => ({
     ...board,
@@ -66,7 +68,7 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
     const searchFilter = search ? _.includes(boardItem.title.toLowerCase(), (search as string).toLowerCase()) : true;
 
     if (!isMyFilter && !isSharedFilter) {
-     return isFavFilter && searchFilter;
+      return isFavFilter && searchFilter;
     }
 
     if (isMyFilter) {
@@ -82,7 +84,7 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
 }));
 
 router.get('/:id', asyncHandler(async (req: JwtRequest, res) => {
-  const board = await db.boardsCrud.getOneById(req.params.id);
+  const board = await db.boardsCrud.getOneById(req.params.id, { projection: { snapshot: 0 }});
   res.json(board);
 }));
 
@@ -135,7 +137,7 @@ router.delete('/:id', asyncHandler(async (req: JwtRequest, res) => {
   }
 
   await db.boardsCrud.deleteOne(boardId);
-  res.status(201).send();
+  res.status(204).send();
 }));
 
 router.post('/:id/favorite', asyncHandler(async (req: JwtRequest, res) => {
@@ -155,6 +157,73 @@ router.post('/:id/favorite', asyncHandler(async (req: JwtRequest, res) => {
 
   await db.userCrud.setBoardFavorite(userId, boardId, adding);
   res.status(201).send();
+}));
+
+router.post('/:id/invite', asyncHandler(async (req: JwtRequest, res) => {
+  const boardId = req.params.id;
+  const userId = req.auth!.userId;
+
+  const board = await db.boardsCrud.getOneById(boardId);
+
+  const exception = verifyBoardAndOwner(userId, board);
+
+  if (exception) {
+    return exception.throw(res);
+  }
+
+  const { email, canEdit } = req.body;
+  const { errors } = await validateEmail(email);
+
+  if (errors) {
+    return new BadRequestException({ message: 'Invalid email' }).throw(res);
+  }
+
+  const invitedUser = await db.userCrud.getUserByEmail(email);
+  if (!invitedUser) {
+    console.info('Send invitation to user');
+  } else {
+    await db.userCrud.addBoard(String(invitedUser._id), { boardId, canEdit });
+  }
+
+  res.status(201).send();
+
+}));
+
+router.patch('/:id/public-perms', asyncHandler(async (req: JwtRequest, res) => {
+  const boardId = req.params.id;
+  const userId = req.auth!.userId;
+
+  const board = await db.boardsCrud.getOneById(boardId);
+
+  const exception = verifyBoardAndOwner(userId, board);
+
+  if (exception) {
+    return exception.throw(res);
+  }
+
+  const { errors, data } = await validatePublicBoardPermissions(req.body);
+
+  if (errors) {
+    return new ValidationException(errors).throw(res);
+  }
+
+  if (!data) {
+    return new BadRequestException({ message: 'Something went wrong' }).throw(res);
+  }
+
+  if ((!data.anonUsers.canView && data.anonUsers.canEdit) || (!data.registeredUsers.canView && data.registeredUsers.canEdit)) {
+    return new BadRequestException({ message: 'Incompatible permissions: users must also be able to view if they can edit the board' }).throw(res);
+  }
+
+  await db.boardsCrud.setPublicBoardPerms(boardId, data);
+
+  res.status(200).send();
+}));
+
+router.get('/public/:publicId', asyncHandler(async (req, res) => {
+  const board = await db.boardsCrud.getBoardByPublicId(req.params.publicId);
+
+  res.json(board);
 }));
 
 export default router;

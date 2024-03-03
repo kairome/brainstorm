@@ -2,6 +2,7 @@ import { CreateUserPayload, UserDoc } from '@/types/user';
 import { DbInstance } from '@/db/index';
 import { ObjectId } from 'mongodb';
 import { DbCrud } from '@/db/crud';
+import { InvitedBoard } from '@/types/boards';
 
 export class UsersCrud extends DbCrud<UserDoc> {
   constructor(dbInstance: DbInstance) {
@@ -21,7 +22,7 @@ export class UsersCrud extends DbCrud<UserDoc> {
       ...data,
       createdAt: new Date(),
       updatedAt: new Date(),
-      boards: [],
+      invitedBoards: [],
       favoriteBoards: [],
     });
   }
@@ -35,12 +36,9 @@ export class UsersCrud extends DbCrud<UserDoc> {
     return this.updateOneRaw({ _id: userId }, update as any);
   }
 
-  public async setBoard(userId: string, boardId: string, adding: boolean = true) {
-    const update = adding ? {
-      $push: { boards: boardId },
-    } : {
-      $pull: { boards: boardId }
-    };
-    return this.updateOneRaw({ _id: userId }, update as any);
+  public async addBoard(userId: string, invitedBoard: InvitedBoard) {
+    return this.updateOneRaw({ _id: userId }, {
+      $push: { invitedBoards: invitedBoard } as any
+    })
   }
 }
