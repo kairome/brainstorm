@@ -6,6 +6,7 @@ import TemplatesPage from 'pages/Templates/TemplatesPage';
 import MembersPages from 'pages/Members/MembersPages';
 import NotFound from 'ui/NotFound/NotFound';
 import PublicBoard from 'pages/PublicBoard/PublicBoard';
+import Template from 'pages/Template/Template';
 
 import Main from './Main';
 
@@ -29,6 +30,10 @@ export default [
       {
         path: '/boards/:id',
         element: <Board />,
+      },
+      {
+        path: '/templates/:id',
+        element: <Template />,
       },
       {
         path: '/templates',

@@ -3,6 +3,7 @@ import { DB_CONNECTION } from '@/config';
 import { BoardsCrud } from '@/db/boards';
 import { UsersCrud } from '@/db/users';
 import { FilesCrud } from '@/db/files';
+import { TemplatesCrud } from '@/db/templates';
 
 export class DbInstance {
   private readonly client: MongoClient;
@@ -32,10 +33,12 @@ const dbInstance = new DbInstance('sample');
 const userCrud = new UsersCrud(dbInstance);
 const boardsCrud = new BoardsCrud(dbInstance);
 const filesCrud = new FilesCrud(dbInstance);
+const templatesCrud = new TemplatesCrud(dbInstance);
 
 export default {
   dbInstance,
   userCrud,
   boardsCrud,
   filesCrud,
+  templatesCrud,
 };

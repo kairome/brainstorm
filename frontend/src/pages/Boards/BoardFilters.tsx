@@ -1,8 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import Input from 'ui/Input/Input';
-import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
 import {
-  IoSearchOutline,
   IoClipboardOutline,
   IoClipboard,
   IoShareSocialOutline,
@@ -12,6 +9,7 @@ import {
 import { IoIosStarOutline, IoIosStar } from 'react-icons/io';
 import classNames from 'classnames';
 import { BoardFiltersPayload } from 'types/boards';
+import SearchInput from 'ui/Input/SearchInput';
 
 import s from './Boards.module.css';
 
@@ -20,30 +18,11 @@ interface Props {
 }
 
 const BoardFilters: React.FC<Props> = (props) => {
-  const [searchTextInternal, setSearchTextInternal] = useState('');
-
   const [filters, setFilters] = useState<BoardFiltersPayload>({});
-
-  const debounceSearch = useMemo(() => _.debounce((value: string) => {
-    setFilters(prevFilters => ({ ...prevFilters, search: value }));
-  }, 1500), []);
 
   useEffect(() => {
     props.onChange(filters);
   }, [filters]);
-
-  const handleSearchChange = (value: string) => {
-    debounceSearch.cancel();
-    setSearchTextInternal(value);
-    debounceSearch(value);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      debounceSearch.cancel();
-      setFilters({ ...filters, search: searchTextInternal });
-    }
-  };
 
   const handleBoardFilter = (value: 'my' | 'shared') => {
     setFilters({
@@ -52,9 +31,13 @@ const BoardFilters: React.FC<Props> = (props) => {
     });
   };
 
+  const handleSearchChange = (search: string) => {
+    setFilters(prevFilters => ({ ...prevFilters, search }));
+
+  };
+
   const handleClear = () => {
     setFilters({});
-    setSearchTextInternal('');
   };
 
   const renderClear = () => {
@@ -84,15 +67,11 @@ const BoardFilters: React.FC<Props> = (props) => {
 
   return (
     <div className={s.filters}>
-      <Input
-        type="text"
+      <SearchInput
         label="Search"
         placeholder="Search by name"
-        value={searchTextInternal}
+        value={filters.search}
         onChange={handleSearchChange}
-        onKeyPress={handleKeyPress}
-        icon={<IoSearchOutline />}
-        iconPosition="left"
       />
       <div className={favPillClasses} onClick={() => setFilters({ ...filters, isFavorite: !filters.isFavorite })}>
         {filters.isFavorite ? <IoIosStar /> : <IoIosStarOutline />}

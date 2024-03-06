@@ -32,7 +32,7 @@ const Board: React.FC = () => {
 
   const setAppHeader = useSetRecoilState(appHeaderState);
 
-  const { data: board, isLoading, isFetched, refetch: loadBoard } = useQuery({
+  const { data: board, isLoading, isFetched } = useQuery({
     queryKey: [fetchBoard.name, boardId],
     queryFn: () => fetchBoard.request(boardId ?? ''),
   });
@@ -107,7 +107,6 @@ const Board: React.FC = () => {
         <CustomControlPanel
           user={user}
           board={board}
-          loadBoard={loadBoard}
         />
       </Tldraw>
     </div>

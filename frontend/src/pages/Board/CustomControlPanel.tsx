@@ -13,11 +13,14 @@ import ContextMenu from 'ui/ContextMenu/ContextMenu';
 import { IoShareSocial } from 'react-icons/io5';
 import ShareBoardModal from 'ui/ShareBoard/ShareBoardModal';
 import InviteToBoardModal from 'ui/ShareBoard/InviteToBoardModal';
+import { createTemplate } from 'api/templates';
+import { AxiosError } from 'axios';
+import { getApiErrors } from 'utils/apiErrors';
+import { useNotify } from 'store/alert';
 
 interface Props {
   user: User,
   board: BoardItem,
-  loadBoard: () => void,
 }
 
 const CustomControlPanel: React.FC<Props> = (props) => {
@@ -27,13 +30,26 @@ const CustomControlPanel: React.FC<Props> = (props) => {
 
   const navigate = useNavigate();
 
+  const notify = useNotify();
+
   const [showShareModal, setShowShareModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
   const { mutate: updateTitle } = useMutation({
     mutationFn: updateBoard.request,
-    onSuccess: () => {
-      props.loadBoard();
+  });
+
+  const { mutate: createTemplateRequest } = useMutation({
+    mutationFn: createTemplate.request,
+    onSuccess: (id: string) => {
+      navigate(`/templates/${id}`);
+    },
+    onError: (err: AxiosError) => {
+      const msg = getApiErrors(err);
+      notify({
+        type: 'error',
+        message: typeof msg === 'string' ? msg : 'Failed to create template',
+      });
     },
   });
 
@@ -55,19 +71,24 @@ const CustomControlPanel: React.FC<Props> = (props) => {
   };
 
   const renderShareAction = () => {
-    if (!isOwnBoard) {
-      return null;
-    }
-
     const actions = [
       {
         title: 'Share board',
         onClick: () => setShowShareModal(true),
         icon: null,
+        forbidden: !isOwnBoard,
       },
       {
         title: 'Invite to board',
         onClick: () => setShowInviteModal(true),
+        icon: null,
+        forbidden: !isOwnBoard,
+      },
+      {
+        title: 'Create template',
+        onClick: () => {
+          createTemplateRequest(board._id);
+        },
         icon: null,
       },
     ];

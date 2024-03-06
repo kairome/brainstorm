@@ -11,6 +11,8 @@ import ConfirmationModal from 'ui/Modal/ConfirmationModal';
 import InviteToBoardModal from 'ui/ShareBoard/InviteToBoardModal';
 import ShareBoardModal from 'ui/ShareBoard/ShareBoardModal';
 import { BoardItem } from 'types/boards';
+import { createTemplate } from 'api/templates';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   board: BoardItem,
@@ -20,6 +22,7 @@ interface Props {
 
 const BoardCardActions: React.FC<Props> = (props) => {
   const notify = useNotify();
+  const navigate = useNavigate();
   const { board, isOwner } = props;
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -46,6 +49,20 @@ const BoardCardActions: React.FC<Props> = (props) => {
     },
   });
 
+  const { mutate: createTemplateRequest } = useMutation({
+    mutationFn: createTemplate.request,
+    onSuccess: (id: string) => {
+      navigate(`/templates/${id}`);
+    },
+    onError: (err: AxiosError) => {
+      const msg = getApiErrors(err);
+      notify({
+        type: 'error',
+        message: typeof msg === 'string' ? msg : 'Failed to create template',
+      });
+    },
+  });
+
   const boardActions = [
     {
       title: 'Share',
@@ -67,7 +84,7 @@ const BoardCardActions: React.FC<Props> = (props) => {
       title: 'Create template',
       icon: <IoSaveOutline />,
       onClick: () => {
-        console.log('save as template');
+        createTemplateRequest(board._id);
       },
     },
     {

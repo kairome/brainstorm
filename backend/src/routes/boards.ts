@@ -50,41 +50,38 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
     return new BadRequestException({ message: 'User not found' }).throw(res);
   }
 
-  const ownBoards = await db.boardsCrud.getByAuthor(userId);
-  const invitedBoardIds = _.map(user.invitedBoards, b => b.boardId);
-  const sharedBoards = _.isEmpty(invitedBoardIds) ? [] : await db.boardsCrud.getSharedBoards(invitedBoardIds);
-
-  const allBoards = _.map(_.concat(ownBoards, sharedBoards), (board) => ({
-    ...board,
-    isFavorite: _.includes(user.favoriteBoards, String(board._id)),
-  }));
-
   const { isFavorite, board, search } = req.query;
 
-  const filteredBoards = _.filter(allBoards, (boardItem) => {
-    const isFavFilter = isFavorite === 'true' ? boardItem.isFavorite : true;
-    const isMyFilter = board === 'my';
-    const isSharedFilter = board === 'shared';
-    const searchFilter = search ? _.includes(boardItem.title.toLowerCase(), (search as string).toLowerCase()) : true;
+  const ownBoardDocs = await db.boardsCrud.getByAuthor(userId, search as string);
+  const invitedBoardIds = _.map(user.invitedBoards, b => b.boardId);
+  const sharedBoardDocs = await db.boardsCrud.getSharedBoards(invitedBoardIds, search as string);
 
-    if (!isMyFilter && !isSharedFilter) {
-      return isFavFilter && searchFilter;
-    }
+  const ownBoards = _.map(ownBoardDocs, b => ({ ...b, isFavorite: _.includes(user.favoriteBoards, String(b._id)) }));
+  const sharedBoards = _.map(sharedBoardDocs, b => ({
+    ...b,
+    isFavorite: _.includes(user.favoriteBoards, String(b._id))
+  }));
 
-    if (isMyFilter) {
-      return isFavFilter && searchFilter && boardItem.author === userId;
-    }
+  const isFavFilter = isFavorite === 'true';
 
-    if (isSharedFilter) {
-      return isFavFilter && searchFilter && boardItem.author !== userId;
-    }
-  });
+  const filteredMyBoards = _.filter(ownBoards, b => isFavFilter ? b.isFavorite : true);
+  const filteredSharedBoards = _.filter(sharedBoards, b => isFavFilter ? b.isFavorite : true);
 
-  res.json(filteredBoards);
+  if (board === 'my') {
+    res.json(filteredMyBoards);
+    return;
+  }
+
+  if (board === 'shared') {
+    res.json(filteredSharedBoards);
+    return;
+  }
+
+  res.json(_.concat(filteredMyBoards, filteredSharedBoards));
 }));
 
 router.get('/:id', asyncHandler(async (req: JwtRequest, res) => {
-  const board = await db.boardsCrud.getOneById(req.params.id, { projection: { snapshot: 0 }});
+  const board = await db.boardsCrud.getOneById(req.params.id, { projection: { snapshot: 0 } });
   res.json(board);
 }));
 

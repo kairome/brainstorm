@@ -5,14 +5,22 @@ import { ObjectId } from 'mongodb';
 import _ from 'lodash';
 import boardSnapshot from '@/utils/boardSnapshot';
 import { v4 } from 'uuid';
+import { TemplateDoc } from '@/types/templates';
 
 export class BoardsCrud extends DbCrud<BoardDoc> {
   constructor(dbInstance: DbInstance) {
     super(dbInstance, 'boards');
   }
 
-  public async getByAuthor(authorId: string) {
-    return this.getAll({ author: authorId }, {
+  public async getByAuthor(authorId: string, searchText?: string) {
+    const searchFilter = searchText ? {
+      title: {
+        $regex: searchText,
+        $options: 'i',
+      },
+    } : {};
+
+    return this.getAll({ author: authorId, ...searchFilter }, {
       sort: {
         createdAt: -1
       },
@@ -22,8 +30,18 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
     });
   }
 
-  public async getSharedBoards(boardIds: string[]) {
-    return this.getAll({ _id: { $in: _.map(boardIds, bid => new ObjectId(bid)) } }, {
+  public async getSharedBoards(boardIds: string[], searchText?: string) {
+    if (_.isEmpty(boardIds)) {
+      return [];
+    }
+
+    const searchFilter = searchText ? {
+      title: {
+        $regex: searchText,
+        $options: 'i',
+      },
+    } : {};
+    return this.getAll({ _id: { $in: _.map(boardIds, bid => new ObjectId(bid)) }, ...searchFilter }, {
       sort: {
         createdAt: -1
       },
@@ -36,11 +54,11 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
   public async create(data: CreateBoardPayload) {
     return this.createOne({
       ...data,
+      snapshot: boardSnapshot,
       customThumbnail: false,
       createdAt: new Date(),
       updatedAt: new Date(),
       modifiedBy: null,
-      snapshot: boardSnapshot,
       publicId: v4(),
       publicPermissions: {
         anonUsers: {
@@ -68,7 +86,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       _id: boardId,
       snapshot,
       modifiedBy,
-    })
+    });
   }
 
   public async setPublicBoardPerms(boardId: string, perms: PublicBoardPermissions) {
@@ -87,6 +105,29 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
         modifiedBy: 0,
         author: 0,
       },
-    })
+    });
+  }
+
+  public async createFromTemplate(template: TemplateDoc) {
+    return this.createOne({
+      title: template.title,
+      snapshot: template.snapshot,
+      author: template.owner,
+      customThumbnail: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      modifiedBy: null,
+      publicId: v4(),
+      publicPermissions: {
+        anonUsers: {
+          canView: false,
+          canEdit: false,
+        },
+        registeredUsers: {
+          canView: true,
+          canEdit: false,
+        },
+      },
+    });
   }
 }

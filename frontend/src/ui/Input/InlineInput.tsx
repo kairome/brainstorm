@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import classNames from 'classnames';
 
@@ -14,6 +14,10 @@ interface Props {
 const InlineInput: React.FC<Props> = (props) => {
   const { initialValue, className, canEdit } = props;
   const [internalValue, setInternalValue] = useState(initialValue);
+
+  useEffect(() => {
+    setInternalValue(initialValue);
+  }, [initialValue]);
 
   const handleBlur = () => {
     if (!internalValue.trim()) {

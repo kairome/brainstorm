@@ -83,7 +83,17 @@ const PublicBoard: React.FC = () => {
     );
   }
 
-  if (publicBoard && !publicBoard.publicPermissions.anonUsers.canView && !user) {
+  const { anonUsers, registeredUsers } = publicBoard.publicPermissions;
+
+  if (!registeredUsers.canView && !anonUsers.canView) {
+    return (
+      <NotFound
+        text="The owner restricted access to this board"
+      />
+    );
+  }
+
+  if (!anonUsers.canView && !user) {
     return (
       <NotFound
         text="Only registered users can view this board"
@@ -95,7 +105,6 @@ const PublicBoard: React.FC = () => {
   }
 
   const handleBoardMount = (editor: Editor) => {
-    const { anonUsers, registeredUsers } = publicBoard.publicPermissions;
     const updates = {
       isDebugMode: false,
       isReadonly: user ? !registeredUsers.canEdit : !anonUsers.canEdit,

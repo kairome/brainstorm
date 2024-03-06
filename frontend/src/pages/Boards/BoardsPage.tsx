@@ -99,13 +99,11 @@ const BoardsPage: React.FC = () => {
   };
 
   return (
-    <>
-      <ContentLoader loading={boardsLoading}>
-        <h1 className={commonS.pageTitle}>My boards</h1>
-        <BoardFilters onChange={handleFiltersChange} />
-        {renderBoards()}
-      </ContentLoader>
-    </>
+    <ContentLoader loading={boardsLoading}>
+      <h1 className={commonS.pageTitle}>My boards</h1>
+      <BoardFilters onChange={handleFiltersChange} />
+      {renderBoards()}
+    </ContentLoader>
   );
 };
 

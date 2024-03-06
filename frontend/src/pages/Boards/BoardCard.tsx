@@ -11,11 +11,11 @@ import { IoIosStarOutline, IoIosStar } from 'react-icons/io';
 import contextMenuS from 'ui/ContextMenu/ContextMenu.module.css';
 import classNames from 'classnames';
 import { Tooltip } from 'react-tooltip';
-import { DateTime } from 'luxon';
 import { useRecoilValue } from 'recoil';
 import { userState } from 'store/user';
 import BoardCardActions from 'pages/Boards/BoardCardActions';
 import { useNotify } from 'store/alert';
+import { getFormattedDate } from 'utils/dates';
 
 interface Props {
   board: BoardItem,
@@ -85,7 +85,6 @@ const BoardCard: React.FC<Props> = (props) => {
     return (
       <DefaultThumbnail
         className={s.thumbnail}
-        onClick={() => navigate(`/boards/${board._id}`)}
       />
     );
   };
@@ -104,12 +103,6 @@ const BoardCard: React.FC<Props> = (props) => {
       />
     );
   };
-
-  const updatedAt = DateTime.fromISO(board.updatedAt);
-  const dateCutOff = DateTime.now().minus({ day: 1 });
-  const updatedDate = dateCutOff < updatedAt ?
-    DateTime.now().plus(updatedAt.diffNow()).toRelative() :
-    updatedAt.toFormat('dd.MM.yyyy HH:mm');
 
   return (
     <Card
@@ -141,7 +134,7 @@ const BoardCard: React.FC<Props> = (props) => {
         </div>
         <div className={s.boardStatus}>
           {board.modifiedBy ? `Modified by ${board.modifiedBy}, ` : 'Modified '}
-          {updatedDate}
+          {getFormattedDate(board.updatedAt)}
         </div>
       </div>
       {renderThumbnail()}
