@@ -98,7 +98,7 @@ const getUserCanEditBoard = (user: WsUser, board: WsBoard) => {
     return true;
   }
 
-  const invited = _.find(user.invitedBoards, b => b.boardId === String(board._id));
+  const invited = _.find(board.invitedUsers, u => u.userId === String(user._id));
 
   return invited && invited.canEdit;
 };

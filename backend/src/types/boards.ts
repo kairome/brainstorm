@@ -16,6 +16,13 @@ export interface PublicBoardPermissions {
   },
 }
 
+export interface InvitedUser {
+  userId: string | null,
+  name: string | null,
+  canEdit: boolean,
+  email: string,
+}
+
 export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   customThumbnail: boolean,
   modifiedBy: string | null,
@@ -25,9 +32,14 @@ export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   },
   publicId: string,
   publicPermissions: PublicBoardPermissions,
+  invitedUsers: InvitedUser[],
 };
 
-export interface InvitedBoard {
-  boardId: string,
-  canEdit: boolean,
+export interface MemberBoardsPermissions {
+  email: string,
+  boards: {
+    boardId: string,
+    canEdit: boolean,
+    removed: boolean,
+  }[],
 }

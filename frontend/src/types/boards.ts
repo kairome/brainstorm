@@ -9,6 +9,13 @@ export interface PublicBoardPermissions {
   },
 }
 
+export interface InvitedUser {
+  userId: string | null,
+  name: string | null,
+  canEdit: boolean,
+  email: string,
+}
+
 export interface BoardItem {
   _id: string,
   title: string,
@@ -20,6 +27,7 @@ export interface BoardItem {
   isFavorite: boolean,
   publicId: string,
   publicPermissions: PublicBoardPermissions,
+  invitedUsers: InvitedUser[],
 }
 
 export interface PublicBoardItem {

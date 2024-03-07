@@ -52,9 +52,9 @@ router.post('', asyncHandler(async (req: JwtRequest, res) => {
     return new BadRequestException({ message: 'No such board found' }).throw(res);
   }
 
-  const invitedBoard = _.find(user.invitedBoards, b => b.boardId === boardId);
+  const invitedUser = _.find(board.invitedUsers, u => u.userId === userId);
 
-  if (!invitedBoard && userId !== board.author) {
+  if (!invitedUser && userId !== board.author) {
     return new ForbiddenException('Only board authors or invited members can create templates').throw(res);
   }
 

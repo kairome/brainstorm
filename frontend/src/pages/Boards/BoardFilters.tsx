@@ -83,7 +83,7 @@ const BoardFilters: React.FC<Props> = (props) => {
       </div>
       <div className={sharedBoardClasses} onClick={() => handleBoardFilter('shared')}>
         {filters.board === 'shared' ? <IoShareSocial /> : <IoShareSocialOutline />}
-        <span>Shared boards</span>
+        <span>Invited boards</span>
       </div>
       {renderClear()}
     </div>

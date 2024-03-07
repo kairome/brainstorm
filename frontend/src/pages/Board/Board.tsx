@@ -67,11 +67,21 @@ const Board: React.FC = () => {
     );
   }
 
+  const invited = _.find(board.invitedUsers, u => u.userId === user._id);
+
+  if (!invited && board.author !== user._id) {
+    return (
+      <NotFound
+        text="You are not invited to this board"
+      />
+    );
+  }
+
   const handleBoardMount = (editor: Editor) => {
     const updates: any = { isDebugMode: false };
 
-    const invitedBoard = _.find(user.invitedBoards, b => b.boardId === board._id);
-    if ((!invitedBoard || !invitedBoard.canEdit) && board.author !== user._id) {
+    const invitedUser = _.find(board.invitedUsers, u => u.userId === user._id);
+    if ((!invitedUser || !invitedUser.canEdit) && board.author !== user._id) {
       updates.isReadonly = true;
     }
 

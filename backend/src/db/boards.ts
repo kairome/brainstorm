@@ -1,4 +1,4 @@
-import { BoardDoc, CreateBoardPayload, PublicBoardPermissions } from '@/types/boards';
+import { BoardDoc, CreateBoardPayload, InvitedUser, PublicBoardPermissions } from '@/types/boards';
 import { DbInstance } from '@/db/index';
 import { DbCrud } from '@/db/crud';
 import { ObjectId } from 'mongodb';
@@ -26,27 +26,99 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       },
       projection: {
         snapshot: 0,
+        invitedUsers: 0,
       },
     });
   }
 
-  public async getSharedBoards(boardIds: string[], searchText?: string) {
-    if (_.isEmpty(boardIds)) {
-      return [];
-    }
+  public async getMembers(userId: string) {
+    const userBoards = await this.getAll({
+      author: userId,
+      invitedUsers: {
+        $exists: true,
+        $ne: [],
+      },
+    }, {
+      projection: {
+        _id: 1,
+        title: 1,
+        invitedUsers: 1,
+      },
+    });
 
+    const members = _.flatMap(userBoards, b => {
+      return _.map(b.invitedUsers, user => ({
+        ...user,
+        boards: [{ id: String(b._id), title: b.title, canEdit: user.canEdit }],
+      }));
+    });
+
+    const grouped = _.groupBy(members, 'email');
+
+    return _.map(grouped, (val, key) => {
+      const { userId, email, name } = val[0];
+      return {
+        userId,
+        email,
+        name,
+        boards: _.flatMap(val, b => b.boards),
+      };
+    });
+  }
+
+  public async removeMember(author: string, email: string) {
+    return this.updateManyRaw({
+      author,
+    }, {
+      $pull: {
+        invitedUsers: { email },
+      } as any,
+    });
+  }
+
+  public async removeMemberFromBoards(author: string, email: string, boardIds: string[]) {
+    const boardObjectIds = _.map(boardIds, bid => new ObjectId(bid));
+    return this.updateManyRaw({
+      author,
+      _id: { $in: boardObjectIds }
+    }, {
+      $pull: {
+        invitedUsers: { email },
+      } as any,
+    });
+  }
+
+  public async updateBoardMemberPerms(author: string, boardId: string, memberEmail: string, canEdit: boolean) {
+    return this.updateOneWithFilters({
+      _id: new ObjectId(boardId),
+      author,
+      'invitedUsers.email': memberEmail,
+    }, {
+      $set: { 'invitedUsers.$.canEdit': canEdit }
+    });
+  }
+
+  public async getSharedBoards(userId: string, searchText?: string) {
     const searchFilter = searchText ? {
       title: {
         $regex: searchText,
         $options: 'i',
       },
     } : {};
-    return this.getAll({ _id: { $in: _.map(boardIds, bid => new ObjectId(bid)) }, ...searchFilter }, {
+
+    return this.getAll({
+      invitedUsers: {
+        $elemMatch: {
+          userId,
+        }
+      }, ...searchFilter
+    }, {
       sort: {
         createdAt: -1
       },
       projection: {
         snapshot: 0,
+        invitedUsers: 0,
       },
     });
   }
@@ -70,6 +142,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
           canEdit: false,
         },
       },
+      invitedUsers: [],
     });
   }
 
@@ -128,6 +201,26 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
           canEdit: false,
         },
       },
+      invitedUsers: [],
+    });
+  }
+
+  public async addInvitedUser(boardId: string, invitedUser: InvitedUser) {
+    return this.updateOneRaw({
+      _id: boardId,
+    }, {
+      $push: { invitedUsers: invitedUser }
+    } as any);
+  }
+
+  public async updateInvitedUserInfo(email: string, userId: string, name: string) {
+    return this.updateManyRaw({
+      'invitedUsers.email': email,
+    }, {
+      $set: {
+        'invitedUsers.$.userId': userId,
+        'invitedUsers.$.name': name,
+      }
     });
   }
 }

@@ -6,8 +6,10 @@ import _ from 'lodash';
 interface Props {
   label: string,
   placeholder: string,
-  value?: string,
   onChange: (v: string) => void,
+  value?: string,
+  delay?: number,
+  className?: string,
 }
 
 const SearchInput: React.FC<Props> = (props) => {
@@ -15,12 +17,13 @@ const SearchInput: React.FC<Props> = (props) => {
     label,
     placeholder,
     value = '',
+    delay = 1500,
   } = props;
   const [searchTextInternal, setSearchTextInternal] = useState('');
 
   const debounceSearch = useMemo(() => _.debounce((v: string) => {
     props.onChange(v);
-  }, 1500), []);
+  }, delay), []);
 
   useEffect(() => {
     if (value !== searchTextInternal) {
@@ -50,6 +53,7 @@ const SearchInput: React.FC<Props> = (props) => {
       onChange={handleSearchChange}
       onKeyPress={handleKeyPress}
       icon={<IoSearchOutline />}
+      className={props.className}
       iconPosition="left"
     />
   );

@@ -53,8 +53,8 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
   const { isFavorite, board, search } = req.query;
 
   const ownBoardDocs = await db.boardsCrud.getByAuthor(userId, search as string);
-  const invitedBoardIds = _.map(user.invitedBoards, b => b.boardId);
-  const sharedBoardDocs = await db.boardsCrud.getSharedBoards(invitedBoardIds, search as string);
+
+  const sharedBoardDocs = await db.boardsCrud.getSharedBoards(userId, search as string);
 
   const ownBoards = _.map(ownBoardDocs, b => ({ ...b, isFavorite: _.includes(user.favoriteBoards, String(b._id)) }));
   const sharedBoards = _.map(sharedBoardDocs, b => ({
@@ -81,7 +81,18 @@ router.get('', asyncHandler(async (req: JwtRequest, res) => {
 }));
 
 router.get('/:id', asyncHandler(async (req: JwtRequest, res) => {
+  const userId = req.auth!.userId;
+
   const board = await db.boardsCrud.getOneById(req.params.id, { projection: { snapshot: 0 } });
+
+  if (!board) {
+    res.json(null);
+    return;
+  }
+
+  const invited = _.find(board.invitedUsers, u => u.userId === userId);
+
+  board.invitedUsers = invited ? [invited] : [];
   res.json(board);
 }));
 
@@ -176,11 +187,24 @@ router.post('/:id/invite', asyncHandler(async (req: JwtRequest, res) => {
   }
 
   const invitedUser = await db.userCrud.getUserByEmail(email);
-  if (!invitedUser) {
-    console.info('Send invitation to user');
-  } else {
-    await db.userCrud.addBoard(String(invitedUser._id), { boardId, canEdit });
+  const user = await db.userCrud.getUserById(userId);
+
+  if (user?.email === email) {
+    return new BadRequestException({ message: 'Cannot invite yourself to your own board' }).throw(res);
   }
+
+  const alreadyInvitedUser = _.find(board?.invitedUsers, u => u.email === email);
+
+  if (alreadyInvitedUser) {
+    return new BadRequestException({ message: 'Member was already invited to this board' }).throw(res);
+  }
+
+  await db.boardsCrud.addInvitedUser(boardId, {
+    email,
+    canEdit,
+    userId: invitedUser ? String(invitedUser._id) : null,
+    name: invitedUser ? invitedUser.name : null,
+  });
 
   res.status(201).send();
 

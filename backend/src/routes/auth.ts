@@ -27,6 +27,8 @@ router.post('/register', asyncHandler(async (req, res) => {
   const passHash = await bcrypt.hash(password, 10);
   const newUser = await db.userCrud.createUser({ name, email, passwordHash: passHash });
 
+  await db.boardsCrud.updateInvitedUserInfo(email, String(newUser.insertedId), name);
+
   res.json({
     token: generateToken(email, String(newUser.insertedId)),
   });

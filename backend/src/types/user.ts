@@ -1,5 +1,4 @@
 import { TimeStampDocument } from '@/types/entities';
-import { InvitedBoard } from '@/types/boards';
 
 export interface CreateUserPayload {
   name: string,
@@ -8,7 +7,6 @@ export interface CreateUserPayload {
 }
 
 export type UserDoc = CreateUserPayload & TimeStampDocument & {
-  invitedBoards: InvitedBoard[],
   favoriteBoards: string[],
 };
 

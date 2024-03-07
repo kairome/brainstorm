@@ -1,8 +1,8 @@
-import { boolean, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 import { LoginPayload, RegPayload } from '@/types/auth';
 import { YupError } from '@/types/entities';
 import _ from 'lodash';
-import { PublicBoardPermissions } from '@/types/boards';
+import { MemberBoardsPermissions, PublicBoardPermissions } from '@/types/boards';
 
 const REQUIRED_MSG = 'This field is required';
 const EMAIL_MSG = 'Incorrect email';
@@ -32,6 +32,16 @@ const publicBoardPermissionsSchema = object({
     canEdit: boolean().required(REQUIRED_MSG),
   })
 });
+
+const boardMembersSchema = object({
+  email: string().email(EMAIL_MSG).required(REQUIRED_MSG),
+  boards: array(object({
+    boardId: string().required(REQUIRED_MSG),
+    canEdit: boolean().required(REQUIRED_MSG),
+    removed: boolean().required(REQUIRED_MSG),
+
+  })).required().min(1),
+})
 
 const mapErrors = (error: YupError) => {
   return _.map(error.inner, v => ({ name: v.path, message: v.message }));
@@ -100,3 +110,19 @@ export const validatePublicBoardPermissions = async (data: PublicBoardPermission
     };
   }
 };
+
+export const validateBoardMemberPermissions = async (data: MemberBoardsPermissions) => {
+  try {
+    const validatedData = await boardMembersSchema.validate(data, { abortEarly: false, stripUnknown: true });
+    return {
+      data: validatedData,
+      errors: null,
+    };
+  } catch (err) {
+    const errors = mapErrors(err as YupError);
+    return {
+      data: null,
+      errors,
+    };
+  }
+}

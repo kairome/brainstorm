@@ -51,5 +51,13 @@ export class DbCrud<T extends Document> {
   protected async updateOneRaw(doc: Partial<T>, updateOptions: UpdateFilter<T>) {
     return this.collection.updateOne({ _id: new ObjectId(doc._id) } as any, updateOptions);
   }
+
+  protected async updateOneWithFilters(filters: Filter<T>, updateOptions: UpdateFilter<T>) {
+    return this.collection.updateOne(filters, updateOptions);
+  }
+
+  protected async updateManyRaw(filters: Filter<T>, updateOptions: UpdateFilter<T>) {
+    return this.collection.updateMany(filters, updateOptions);
+  }
 }
 
