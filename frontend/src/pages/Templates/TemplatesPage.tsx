@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import commonS from 'css/common.module.css';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { createTemplate, fetchTemplates } from 'api/templates';
 import ContentLoader from 'ui/Loader/ContentLoader';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ import Card from 'ui/Card/Card';
 import s from 'pages/Boards/Boards.module.css';
 import { AxiosError } from 'axios';
 import { getApiErrors } from 'utils/apiErrors';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useNotify } from 'store/alert';
 import SearchInput from 'ui/Input/SearchInput';
 import { IoClose } from 'react-icons/io5';
@@ -20,11 +20,12 @@ const TemplatesPage: React.FC = () => {
   const navigate = useNavigate();
   const notify = useNotify();
 
-  const [searchText, setSearchText] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data: templates, isLoading, refetch: loadTemplates } = useQuery({
-    queryKey: [fetchTemplates.name, searchText],
-    queryFn: () => fetchTemplates.request({ search: searchText }),
+  const { data: templates, isFetching, refetch: loadTemplates } = useQuery({
+    queryKey: [fetchTemplates.name, searchParams.get('search')],
+    queryFn: () => fetchTemplates.request({ search: searchParams.get('search') ?? '' }),
+    placeholderData: keepPreviousData,
   });
 
   const { mutate: createTemplateRequest } = useMutation({
@@ -42,12 +43,12 @@ const TemplatesPage: React.FC = () => {
   });
 
   const renderClear = () => {
-    if (!searchText) {
+    if (!searchParams.get('search')) {
       return null;
     }
 
     return (
-      <div onClick={() => setSearchText('')} className={s.clearFilters}>
+      <div onClick={() => setSearchParams({})} className={s.clearFilters}>
         <IoClose />
         Clear
       </div>
@@ -76,14 +77,14 @@ const TemplatesPage: React.FC = () => {
   };
 
   return (
-    <ContentLoader loading={isLoading}>
+    <ContentLoader loading={isFetching}>
       <h1 className={commonS.pageTitle}>Templates</h1>
       <div className={s.filters}>
         <SearchInput
           label="Search"
           placeholder="Search by name"
-          value={searchText}
-          onChange={setSearchText}
+          value={searchParams.get('search') ?? ''}
+          onChange={v => setSearchParams({ search: v })}
         />
         {renderClear()}
       </div>

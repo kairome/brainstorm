@@ -4,7 +4,7 @@ import { PiArrowCircleLeftBold } from 'react-icons/pi';
 import InlineInput from 'ui/Input/InlineInput';
 import { useMutation } from '@tanstack/react-query';
 import { updateBoard } from 'api/boards';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SetThumbnail from 'pages/Board/controlPanels/SetThumbnail';
 import { User } from 'types/user';
 import { BoardItem } from 'types/boards';
@@ -29,6 +29,8 @@ const CustomControlPanel: React.FC<Props> = (props) => {
   const isOwnBoard = board.author === user._id;
 
   const navigate = useNavigate();
+
+  const { state } = useLocation();
 
   const notify = useNotify();
 
@@ -105,7 +107,10 @@ const CustomControlPanel: React.FC<Props> = (props) => {
       <div className={s.customControlPanel}>
         <PiArrowCircleLeftBold
           className={s.controlPanelIcon}
-          onClick={() => navigate('/')}
+          onClick={() => navigate({
+            pathname: '/',
+            search: state,
+          })}
         />
         <InlineInput
           initialValue={board.title}

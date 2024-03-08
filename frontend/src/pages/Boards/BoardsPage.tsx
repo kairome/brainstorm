@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import commonS from 'css/common.module.css';
 import Card from 'ui/Card/Card';
 import AddBoardLogo from 'assets/addBoard.svg?react';
 import { useMutation } from '@tanstack/react-query';
 import { addBoard, fetchBoards } from 'api/boards';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useNotify } from 'store/alert';
 import { getApiErrors } from 'utils/apiErrors';
 import { AxiosError } from 'axios';
 import _ from 'lodash';
 import BoardCard from 'pages/Boards/BoardCard';
-import { BoardFiltersPayload, BoardItem } from 'types/boards';
+import { BoardItem } from 'types/boards';
 import ContentLoader from 'ui/Loader/ContentLoader';
+import queryString from 'query-string';
 
 import s from './Boards.module.css';
 import BoardFilters from './BoardFilters';
@@ -21,7 +22,11 @@ const BoardsPage: React.FC = () => {
   const notify = useNotify();
 
   const [boards, setBoards] = useState<BoardItem[]>([]);
-  const [filters, setFilters] = useState<BoardFiltersPayload>({});
+
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+
+  const filters = useMemo(() => queryString.parse(search), [search]);
 
   const { mutate: addBoardRequest, isPending } = useMutation({
     mutationFn: addBoard.request,
@@ -60,14 +65,6 @@ const BoardsPage: React.FC = () => {
     setBoards(newBoards);
   };
 
-  const handleFiltersChange = (newFilters: BoardFiltersPayload) => {
-    if (_.isEqual(newFilters, filters)) {
-      return;
-    }
-
-    setFilters(newFilters);
-  };
-
   const renderBoards = () => {
     const boardsList = _.map(boards, (board) => {
       return (
@@ -101,7 +98,7 @@ const BoardsPage: React.FC = () => {
   return (
     <ContentLoader loading={boardsLoading}>
       <h1 className={commonS.pageTitle}>My boards</h1>
-      <BoardFilters onChange={handleFiltersChange} />
+      <BoardFilters />
       {renderBoards()}
     </ContentLoader>
   );

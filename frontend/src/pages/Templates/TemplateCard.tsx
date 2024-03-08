@@ -3,7 +3,7 @@ import { TemplateItem } from 'types/template';
 import Card from 'ui/Card/Card';
 import s from 'pages/Boards/Boards.module.css';
 import { Tooltip } from 'react-tooltip';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getFormattedDate } from 'utils/dates';
 import Thumbnail from 'assets/templateThumbnail.svg?react';
 import ContextMenu from 'ui/ContextMenu/ContextMenu';
@@ -25,6 +25,8 @@ const TemplateCard: React.FC<Props> = (props) => {
   const { template } = props;
   const navigate = useNavigate();
   const notify = useNotify();
+
+  const [searchParams] = useSearchParams();
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
@@ -82,7 +84,7 @@ const TemplateCard: React.FC<Props> = (props) => {
   return (
     <Card
       className={s.boardCard}
-      onClick={() => navigate(`/templates/${template._id}`)}
+      onClick={() => navigate(`/templates/${template._id}`, { state: searchParams.toString() })}
     >
       <div className={s.boardContent}>
         <div className={s.boardHeader}>

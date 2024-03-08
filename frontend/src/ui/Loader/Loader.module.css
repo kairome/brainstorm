@@ -59,6 +59,6 @@
 }
 
 .contentLoaderChildren {
-  filter: blur(5px);
+  filter: blur(2px);
   pointer-events: none;
 }

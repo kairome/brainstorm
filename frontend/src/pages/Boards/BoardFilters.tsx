@@ -10,18 +10,17 @@ import { IoIosStarOutline, IoIosStar } from 'react-icons/io';
 import classNames from 'classnames';
 import { BoardFiltersPayload } from 'types/boards';
 import SearchInput from 'ui/Input/SearchInput';
+import { useSearchParams } from 'react-router-dom';
+import queryString from 'query-string';
 
 import s from './Boards.module.css';
 
-interface Props {
-  onChange: (f: BoardFiltersPayload) => void,
-}
-
-const BoardFilters: React.FC<Props> = (props) => {
-  const [filters, setFilters] = useState<BoardFiltersPayload>({});
+const BoardFilters: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams({});
+  const [filters, setFilters] = useState<BoardFiltersPayload>(queryString.parse(searchParams.toString()));
 
   useEffect(() => {
-    props.onChange(filters);
+    setSearchParams(queryString.stringify(filters));
   }, [filters]);
 
   const handleBoardFilter = (value: 'my' | 'shared') => {

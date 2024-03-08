@@ -2,7 +2,7 @@ import React from 'react';
 import s from 'pages/Board/Board.module.css';
 import { PiArrowCircleLeftBold } from 'react-icons/pi';
 import InlineInput from 'ui/Input/InlineInput';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { TemplateItem } from 'types/template';
 import Button from 'ui/Button/Button';
 import { useMutation } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ const TemplateCustomPanel: React.FC<Props> = (props) => {
 
   const navigate = useNavigate();
   const notify = useNotify();
+  const { state } = useLocation();
 
   const { mutate: updateTitle } = useMutation({
     mutationFn: updateTemplate.request,
@@ -51,7 +52,10 @@ const TemplateCustomPanel: React.FC<Props> = (props) => {
       <div className={s.customControlPanel}>
         <PiArrowCircleLeftBold
           className={s.controlPanelIcon}
-          onClick={() => navigate('/templates')}
+          onClick={() => navigate({
+            pathname: '/templates',
+            search: state,
+          })}
         />
         <InlineInput
           initialValue={template.title}

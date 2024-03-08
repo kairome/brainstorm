@@ -3,7 +3,7 @@ import Card from 'ui/Card/Card';
 import s from 'pages/Boards/Boards.module.css';
 import { BoardItem } from 'types/boards';
 import DefaultThumbnail from 'assets/defaultThumbnail.svg?react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchBoardThumbnail, setBoardFavorite } from 'api/boards';
 import Loader from 'ui/Loader/Loader';
@@ -31,6 +31,7 @@ const BoardCard: React.FC<Props> = (props) => {
   const user = useRecoilValue(userState);
 
   const isOwner = user ? user._id === board.author : false;
+  const [searchParams] = useSearchParams();
 
   const { data: thumbnail, isLoading, refetch: loadThumbnail } = useQuery({
     queryKey: [fetchBoardThumbnail.name, board._id],
@@ -107,7 +108,9 @@ const BoardCard: React.FC<Props> = (props) => {
   return (
     <Card
       className={s.boardCard}
-      onClick={() => navigate(`/boards/${board._id}`)}
+      onClick={() => navigate(`/boards/${board._id}`, {
+        state: searchParams.toString(),
+      })}
     >
       <div className={s.boardContent}>
         <div className={s.boardHeader}>
