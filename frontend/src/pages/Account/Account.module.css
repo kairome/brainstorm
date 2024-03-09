@@ -1,0 +1,63 @@
+.presence {
+  display: flex;
+}
+
+.colorPickerCursor {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.presenceName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px;
+  font-size: 13px;
+  margin-top: 20px;
+  box-sizing: border-box;
+  color: white;
+  border-radius: 4px;
+}
+
+.accountSection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.cardButton {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.accountCard {
+  max-width: 100%;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+
+  p {
+    margin-top: 0;
+  }
+}
+
+.dangerZone {
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px dashed var(--error);
+
+  h3 {
+    color: var(--error);
+  }
+}
+
+.confirmPass {
+  max-width: 300px;
+  margin: 15px 0;
+}

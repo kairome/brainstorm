@@ -12,8 +12,11 @@ export class UsersCrud extends DbCrud<UserDoc> {
     return this.getOne({ email }, { projection: { passwordHash: 0 } });
   }
 
-  public async getUserById(id: string) {
-    return this.getOne({ _id: new ObjectId(id) }, { projection: { passwordHash: 0 } });
+  public async getUserById(id: string, full: boolean = false) {
+    const projection = full ? {} : { passwordHash: 0 };
+    return this.getOne({ _id: new ObjectId(id) }, {
+      projection,
+    });
   }
 
   public async createUser(data: CreateUserPayload) {
@@ -22,6 +25,7 @@ export class UsersCrud extends DbCrud<UserDoc> {
       createdAt: new Date(),
       updatedAt: new Date(),
       favoriteBoards: [],
+      color: null,
     });
   }
 
@@ -32,5 +36,19 @@ export class UsersCrud extends DbCrud<UserDoc> {
       $pull: { favoriteBoards: boardId }
     };
     return this.updateOneRaw({ _id: userId }, update as any);
+  }
+
+  public async updateUserInfo(userId: string, updateObj: { color?: string, name?: string }) {
+    return this.updateOne({
+      _id: userId,
+      ...updateObj,
+    });
+  }
+
+  public async updateUserPassHash(userId: string, passwordHash: string) {
+    return this.updateOne({
+      _id: userId,
+      passwordHash,
+    });
   }
 }

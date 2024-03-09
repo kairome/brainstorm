@@ -64,6 +64,7 @@ const PublicBoard: React.FC = () => {
       id: user?._id ?? anonUserId,
       isDarkMode: theme === 'dark',
       name: user?.name ?? 'Anonymous',
+      color: user?.color,
     });
   }, [user, userFetched, theme]);
 

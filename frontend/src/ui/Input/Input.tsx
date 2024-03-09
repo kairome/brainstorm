@@ -10,6 +10,7 @@ interface Props {
   placeholder?: string,
   onChange: (v: string) => void,
   className?: string,
+  wrapperClassName?: string,
   required?: boolean,
   disabled?: boolean,
   error?: string,
@@ -23,6 +24,7 @@ interface Props {
 const Input: React.FC<Props> = (props) => {
   const {
     className,
+    wrapperClassName,
     label,
     onChange,
     error,
@@ -57,7 +59,7 @@ const Input: React.FC<Props> = (props) => {
   });
 
   return (
-    <div className={s.inputWrapper}>
+    <div className={classNames(s.inputWrapper, wrapperClassName)}>
       <label className={s.inputLabel}>{label}</label>
       {iconPosition === 'left' ? renderIcon() : null}
       <input {...rest} onChange={handleChange} className={inputClasses} />

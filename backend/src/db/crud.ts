@@ -48,6 +48,10 @@ export class DbCrud<T extends Document> {
     return this.collection.deleteOne({ _id: new ObjectId(id) as any });
   }
 
+  protected async deleteMany(filters: Filter<T>) {
+    return this.collection.deleteMany(filters);
+  }
+
   protected async updateOneRaw(doc: Partial<T>, updateOptions: UpdateFilter<T>) {
     return this.collection.updateOne({ _id: new ObjectId(doc._id) } as any, updateOptions);
   }

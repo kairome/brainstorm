@@ -47,7 +47,12 @@ const Board: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      setUserPreferences({ id: user._id, isDarkMode: theme === 'dark', name: user.name });
+      setUserPreferences({
+        id: user._id,
+        isDarkMode: theme === 'dark',
+        name: user.name,
+        color: user.color,
+      });
     }
   }, [user, theme]);
 

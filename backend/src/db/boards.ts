@@ -31,6 +31,31 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
     });
   }
 
+  public async getSharedBoards(userId: string, searchText?: string) {
+    const searchFilter = searchText ? {
+      title: {
+        $regex: searchText,
+        $options: 'i',
+      },
+    } : {};
+
+    return this.getAll({
+      invitedUsers: {
+        $elemMatch: {
+          userId,
+        }
+      }, ...searchFilter
+    }, {
+      sort: {
+        createdAt: -1
+      },
+      projection: {
+        snapshot: 0,
+        invitedUsers: 0,
+      },
+    });
+  }
+
   public async getMembers(userId: string) {
     const userBoards = await this.getAll({
       author: userId,
@@ -66,6 +91,22 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
     });
   }
 
+  public async removeAuthorBoards(author: string) {
+    return this.deleteMany({
+      author,
+    });
+  }
+
+  public async removeMemberFromAllBoards(email: string) {
+    return this.updateManyRaw({
+      'invitedUsers.email': email,
+    }, {
+      $pull: {
+        invitedUsers: { email },
+      } as any,
+    });
+  }
+
   public async removeMember(author: string, email: string) {
     return this.updateManyRaw({
       author,
@@ -98,28 +139,11 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
     });
   }
 
-  public async getSharedBoards(userId: string, searchText?: string) {
-    const searchFilter = searchText ? {
-      title: {
-        $regex: searchText,
-        $options: 'i',
-      },
-    } : {};
-
-    return this.getAll({
-      invitedUsers: {
-        $elemMatch: {
-          userId,
-        }
-      }, ...searchFilter
+  public async updateBoardMemberName(memberEmail: string, newName: string) {
+    return this.updateManyRaw({
+      'invitedUsers.email': memberEmail,
     }, {
-      sort: {
-        createdAt: -1
-      },
-      projection: {
-        snapshot: 0,
-        invitedUsers: 0,
-      },
+      $set: { 'invitedUsers.$.name': newName }
     });
   }
 

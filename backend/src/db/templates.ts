@@ -46,4 +46,10 @@ export class TemplatesCrud extends DbCrud<TemplateDoc> {
       title,
     });
   }
+
+  public async removeAllOwnerTemplates(owner: string) {
+    return this.deleteMany({
+      owner,
+    });
+  }
 }

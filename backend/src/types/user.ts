@@ -8,6 +8,7 @@ export interface CreateUserPayload {
 
 export type UserDoc = CreateUserPayload & TimeStampDocument & {
   favoriteBoards: string[],
+  color: string | null,
 };
 
 export interface WsAnonUser {

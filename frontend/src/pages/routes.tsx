@@ -7,6 +7,7 @@ import MembersPages from 'pages/Members/MembersPages';
 import NotFound from 'ui/NotFound/NotFound';
 import PublicBoard from 'pages/PublicBoard/PublicBoard';
 import Template from 'pages/Template/Template';
+import AccountPage from 'pages/Account/AccountPage';
 
 import Main from './Main';
 
@@ -42,6 +43,10 @@ export default [
       {
         path: '/members',
         element: <MembersPages />,
+      },
+      {
+        path: '/account',
+        element: <AccountPage />,
       },
       {
         path: '/',
