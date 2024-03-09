@@ -1,4 +1,4 @@
-import { BoardDoc, CreateBoardPayload, InvitedUser, PublicBoardPermissions } from '@/types/boards';
+import { BoardChatMessage, BoardDoc, CreateBoardPayload, InvitedUser, PublicBoardPermissions } from '@/types/boards';
 import { DbInstance } from '@/db/index';
 import { DbCrud } from '@/db/crud';
 import { ObjectId } from 'mongodb';
@@ -27,6 +27,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       projection: {
         snapshot: 0,
         invitedUsers: 0,
+        chatMessages: 0,
       },
     });
   }
@@ -52,6 +53,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
       projection: {
         snapshot: 0,
         invitedUsers: 0,
+        chatMessages: 0,
       },
     });
   }
@@ -167,6 +169,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
         },
       },
       invitedUsers: [],
+      chatMessages: [],
     });
   }
 
@@ -226,6 +229,7 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
         },
       },
       invitedUsers: [],
+      chatMessages: [],
     });
   }
 
@@ -246,5 +250,13 @@ export class BoardsCrud extends DbCrud<BoardDoc> {
         'invitedUsers.$.name': name,
       }
     });
+  }
+
+  public async saveChatMessage(boardId: string, message: BoardChatMessage) {
+    return this.updateOneRaw({
+      _id: boardId,
+    }, {
+      $push: { chatMessages: message }
+    } as any);
   }
 }

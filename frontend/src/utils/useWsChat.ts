@@ -1,29 +1,26 @@
 import useWebSocket, { ReadyState as WsReadyState } from 'react-use-websocket';
-import { useEffect } from 'react';
+import { getFromLs } from 'utils/localStorage';
+import { BoardChatMessage } from 'types/boards';
 
 const url = `${import.meta.env.VITE_WS_URL}/chat`;
 
-const useWsChat = () => {
-  const socket = useWebSocket(url, {
+const useWsChat = (boardId: string) => {
+  const socket = useWebSocket(`${url}/${boardId}`, {
     retryOnError: true,
     share: true,
     shouldReconnect: () => true,
     onError: () => {
       console.error('Error connecting');
     },
+    queryParams: {
+      token: getFromLs('token'),
+    },
   });
 
-  useEffect(() => {
-    if (socket.readyState === WsReadyState.OPEN) {
-      socket.sendJsonMessage({
-        msg: 'Hello from frontend',
-      });
-    }
-  }, [socket.readyState]);
-
   return {
-    sendMessage: socket.sendMessage,
-    lastMessage: socket.lastJsonMessage,
+    ready: socket.readyState === WsReadyState.OPEN,
+    sendMessage: socket.sendJsonMessage,
+    lastMessage: socket.lastJsonMessage as BoardChatMessage,
   };
 };
 

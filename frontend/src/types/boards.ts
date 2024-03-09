@@ -16,6 +16,16 @@ export interface InvitedUser {
   email: string,
 }
 
+export interface BoardChatMessage {
+  text: string,
+  date: string,
+  user: {
+    name: string,
+    id: string,
+    isAnon: boolean,
+  },
+}
+
 export interface BoardItem {
   _id: string,
   title: string,
@@ -28,6 +38,7 @@ export interface BoardItem {
   publicId: string,
   publicPermissions: PublicBoardPermissions,
   invitedUsers: InvitedUser[],
+  chatMessages: BoardChatMessage[],
 }
 
 export interface PublicBoardItem {

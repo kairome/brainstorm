@@ -3,6 +3,7 @@ import _ from 'lodash';
 import db from '@/db';
 import { BoardDoc } from '@/types/boards';
 import { WsUser } from '@/types/user';
+import { WsBoard, WsClient } from '@/types/entities';
 
 interface BoardRecord {
   clients: Set<WebSocket>,
@@ -18,14 +19,6 @@ interface BoardUpdate {
     removed: Record<string, any>,
     updated: Record<string, any>,
   },
-}
-
-type WsClient = WebSocket & {
-  isAlive: boolean,
-}
-
-type WsBoard = BoardDoc & {
-  isPublic: boolean,
 }
 
 const boardRecords = new Map<string, BoardRecord>();

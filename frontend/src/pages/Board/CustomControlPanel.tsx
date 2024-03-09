@@ -17,6 +17,7 @@ import { createTemplate } from 'api/templates';
 import { AxiosError } from 'axios';
 import { getApiErrors } from 'utils/apiErrors';
 import { useNotify } from 'store/alert';
+import BoardChat from 'pages/Board/controlPanels/BoardChat';
 
 interface Props {
   user: User,
@@ -122,6 +123,7 @@ const CustomControlPanel: React.FC<Props> = (props) => {
         {renderThumbnailAction()}
         <ActiveUsers />
         {renderShareAction()}
+        <BoardChat board={board} />
       </div>
       <ShareBoardModal show={showShareModal} onClose={() => setShowShareModal(false)} board={board} />
       <InviteToBoardModal show={showInviteModal} onClose={() => setShowInviteModal(false)} boardId={board._id} />

@@ -1,28 +1,15 @@
 import { createServer } from 'http';
-import { WebSocketServer } from 'ws';
 import { SECRET_KEY, WS_PORT } from '@/config';
 import jwt from 'jsonwebtoken';
 
 import _ from 'lodash';
 import boardWs from '@/websockets/boards';
+import chatWs from '@/websockets/chat';
 import * as querystring from 'querystring';
 import db from '@/db';
 import { v4 } from 'uuid';
 
 const server = createServer();
-
-const chatWs = new WebSocketServer({ noServer: true });
-
-chatWs.on('connection', (socket, request) => {
-  socket.on('error', console.error);
-  console.info('client connected');
-
-  socket.on('message', (data) => {
-    const message = JSON.parse(data.toString());
-    console.log('received data -> ', message);
-    socket.send(JSON.stringify({ message: 'hello from chat websockets' }));
-  });
-});
 
 const getUserFromToken = async (token?: string) => {
   const anonUser = {
@@ -67,15 +54,17 @@ server.on('upgrade', async (request, socket, head) => {
   const query = querystring.parse(queryParams);
   const user = await getUserFromToken(query.token as string | undefined);
 
-  if (path === '/chat') {
-    if (user.isAnonymous) {
-      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+  if (_.includes(path, '/chat')) {
+    const [, boardId] = path.split('/chat/');
+    const board = await db.boardsCrud.getOneById(boardId);
+
+    if (!board) {
       socket.destroy();
       return;
     }
 
     chatWs.handleUpgrade(request, socket, head, (ws) => {
-      chatWs.emit('connection', ws, request);
+      chatWs.emit('connection', ws, board, user);
     });
   } else if (_.includes(path, '/board')) {
     const [, boardId] = path.split('/board/');

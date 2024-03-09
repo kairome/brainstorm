@@ -23,6 +23,16 @@ export interface InvitedUser {
   email: string,
 }
 
+export interface BoardChatMessage {
+  text: string,
+  date: string,
+  user: {
+    name: string,
+    id: string,
+    isAnon: boolean,
+  },
+}
+
 export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   customThumbnail: boolean,
   modifiedBy: string | null,
@@ -33,6 +43,7 @@ export type BoardDoc = CreateBoardPayload & TimeStampDocument & {
   publicId: string,
   publicPermissions: PublicBoardPermissions,
   invitedUsers: InvitedUser[],
+  chatMessages: BoardChatMessage[],
 };
 
 export interface MemberBoardsPermissions {
