@@ -179,7 +179,7 @@ router.post('/:id/invite', asyncHandler(async (req: JwtRequest, res) => {
     return exception.throw(res);
   }
 
-  const { email, canEdit } = req.body;
+  const { email, canEdit = false } = req.body;
   const { errors } = await validateEmail(email);
 
   if (errors) {
