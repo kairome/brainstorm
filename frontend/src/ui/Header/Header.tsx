@@ -2,6 +2,8 @@ import React from 'react';
 import ThemeSwitch from 'ui/ThemeSwitch/ThemeSwitch';
 import LogoLight from 'assets/brainStormLogo.svg?react';
 import LogoDark from 'assets/brainStormLogoDark.svg?react';
+import LogoLightSm from 'assets/logoSmall.svg?react';
+import LogoDarkSm from 'assets/logoSmallDark.svg?react';
 import { useRecoilValue } from 'recoil';
 import { themeState } from 'store/theme';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -75,11 +77,13 @@ const Header: React.FC<Props> = (props) => {
   };
 
   const LogoCmp = theme === 'dark' ? LogoDark : LogoLight;
+  const LogoCmpSm = theme === 'dark' ? LogoDarkSm : LogoLightSm;
 
   return (
     <div className={s.header}>
       <div className={s.headerContent}>
         <LogoCmp className={s.logo} onClick={() => navigate('/')} />
+        <LogoCmpSm className={s.logoSm} onClick={() => navigate('/')} />
         {renderMenu()}
         <div className={s.headerControls}>
           <ThemeSwitch />

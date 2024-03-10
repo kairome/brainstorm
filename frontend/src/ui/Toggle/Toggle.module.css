@@ -1,3 +1,5 @@
+@import "../../css/media.css";
+
 .toggleWrapper {
   position: relative;
   display: flex;
@@ -39,6 +41,16 @@
     background-color: white;
     transition: .4s;
   }
+
+  @media (--phone) {
+    height: 20px;
+    width: 40px;
+
+    &:before {
+      height: 20px;
+      width: 20px;
+    }
+  }
 }
 
 .disabled {
@@ -52,5 +64,11 @@
 
   &:before {
     left: 30px;
+  }
+
+  @media (--phone) {
+    &:before {
+      left: 20px;
+    }
   }
 }

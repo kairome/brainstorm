@@ -1,3 +1,5 @@
+@import "../../css/media.css";
+
 .inputWrapper {
   position: relative;
 }
@@ -94,6 +96,23 @@
     margin-right: 5px;
     flex-shrink: 0;
   }
+
+  @media (--phone) or (--tablet) {
+    display: none;
+  }
+}
+
+.mobileInline {
+  svg {
+    font-size: 25px;
+  }
+  @media (--desktop) {
+    display: none;
+  }
+}
+
+.saveInternalBtn {
+  margin-top: 10px;
 }
 
 .editable {

@@ -1,3 +1,5 @@
+@import "../../css/media.css";
+
 .canvas {
   position: fixed;
   inset: 0;
@@ -18,6 +20,7 @@
   padding: 0 100px;
   z-index: 300;
   column-gap: 20px;
+  align-items: flex-start;
 }
 
 .customControlPanel {
@@ -30,11 +33,15 @@
   display: flex;
   align-items: flex-end;
   column-gap: 15px;
+
+  @media (--phone) or (--tablet) {
+    min-height: initial;
+    padding: 5px;
+  }
 }
 
-.goBackIcon {
-  font-size: 30px;
-  cursor: pointer;
+.controlPanelActions {
+  composes: customControlPanel;
 }
 
 .controlPanelIcon {
@@ -50,6 +57,18 @@
 
   &:hover {
     background-color: var(--hover-primary-bg);
+  }
+
+  @media (--phone) or (--tablet) {
+    font-size: 35px;
+  }
+}
+
+.contextIcon {
+  font-size: 30px;
+
+  @media (--phone) or (--tablet) {
+    font-size: 25px;
   }
 }
 

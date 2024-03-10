@@ -1,6 +1,12 @@
+@import "../css/media.css";
+
 .content {
   padding: 130px 50px 100px;
   box-sizing: border-box;
+
+  @media (--phone) {
+    padding: 100px 20px 80px;
+  }
 }
 
 .loaderWrapper {

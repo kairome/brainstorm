@@ -1,3 +1,5 @@
+@import "../../css/media.css";
+
 .presence {
   display: flex;
 }
@@ -26,6 +28,10 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-bottom: 30px;
+
+  @media (--phone) or (--tablet) {
+    grid-template-columns: 100%;
+  }
 }
 
 .cardButton {

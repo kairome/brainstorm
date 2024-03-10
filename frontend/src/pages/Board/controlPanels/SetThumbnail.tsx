@@ -10,6 +10,8 @@ import { IoMdCheckmark } from 'react-icons/io';
 import TooltipNotification from 'ui/TooltipNotification/TooltipNotification';
 import { TooltipNotificationState } from 'types/alert';
 
+import s from '../Board.module.css';
+
 interface Props {
   boardId: string,
 }
@@ -118,7 +120,7 @@ const SetThumbnail: React.FC<Props> = (props) => {
         offset={25}
       >
         <IoMdImages
-          size={30}
+          className={s.contextIcon}
           data-tooltip-id="thumbnailAction"
         />
       </ContextMenu>

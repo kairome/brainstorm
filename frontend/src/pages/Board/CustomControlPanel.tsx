@@ -98,7 +98,7 @@ const CustomControlPanel: React.FC<Props> = (props) => {
 
     return (
       <ContextMenu id="shareBoard" actions={actions} offset={25}>
-        <IoShareSocial size={30} />
+        <IoShareSocial className={s.contextIcon} />
       </ContextMenu>
     );
   };
@@ -119,7 +119,7 @@ const CustomControlPanel: React.FC<Props> = (props) => {
           canEdit={isOwnBoard}
         />
       </div>
-      <div className={s.customControlPanel}>
+      <div className={s.controlPanelActions}>
         {renderThumbnailAction()}
         <ActiveUsers />
         {renderShareAction()}

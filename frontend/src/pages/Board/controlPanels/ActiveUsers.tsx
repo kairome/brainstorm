@@ -116,7 +116,7 @@ const ActiveUsers: React.FC = () => {
   return (
     <div className={s.panelContainer} ref={panelRef}>
       <div className={s.controlPanelTrigger} onClick={() => setShowPanel(!showPanel)}>
-        <PiUsersThree size={30} />
+        <PiUsersThree className={s.contextIcon} />
       </div>
       {renderList()}
     </div>

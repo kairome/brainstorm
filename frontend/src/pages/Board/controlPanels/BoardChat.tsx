@@ -32,7 +32,6 @@ const BoardChat: React.FC<Props> = (props) => {
 
   const scrollToBottom = () => {
     if (messagesContainer.current) {
-      console.log(' messagesContainer.current.scrollHeight -> ', messagesContainer.current.scrollHeight);
       messagesContainer.current.scroll({
         top: messagesContainer.current.scrollHeight + 70,
       });
@@ -135,7 +134,7 @@ const BoardChat: React.FC<Props> = (props) => {
   return (
     <div className={s.panelContainer} ref={panelRef}>
       <div className={s.controlPanelTrigger} onClick={() => setShowChat(!showChat)}>
-        <IoChatboxOutline size={30} />
+        <IoChatboxOutline className={s.contextIcon} />
         {hasNewMessage ? (<div className={s.newMessage} />) : null}
       </div>
       {renderChatPanel()}
