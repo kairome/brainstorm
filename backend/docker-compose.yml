@@ -1,19 +1,13 @@
 version: '3.7'
 
+name: brainstorm
 services:
   mongo:
     image: "mongodb/mongodb-community-server"
-    container_name: whiteboard-mongodb
+    container_name: brainstorm-mongodb
     restart: always
     ports:
       - "27017:27017"
-    networks:
-      - whiteboard-backend
-
-  redis:
-    image: "redis"
-    container_name: whiteboard-redis
-    restart: always
     networks:
       - whiteboard-backend
 

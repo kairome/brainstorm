@@ -1,5 +1,5 @@
 import { Db, Document, MongoClient } from 'mongodb';
-import { DB_CONNECTION } from '@/config';
+import { DB_CONNECTION, DB_NAME } from '@/config';
 import { BoardsCrud } from '@/db/boards';
 import { UsersCrud } from '@/db/users';
 import { FilesCrud } from '@/db/files';
@@ -29,7 +29,7 @@ export class DbInstance {
   }
 }
 
-const dbInstance = new DbInstance('sample');
+const dbInstance = new DbInstance(DB_NAME);
 const userCrud = new UsersCrud(dbInstance);
 const boardsCrud = new BoardsCrud(dbInstance);
 const filesCrud = new FilesCrud(dbInstance);

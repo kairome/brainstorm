@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "nodemon --watch './src/**/*.ts' --watch .env --ignore websockets/ --exec tsx ./src/main.ts",
     "dev-ws": "nodemon --watch './src/websockets/**/*.ts' --exec tsx ./src/websockets/wsServer.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node ./dist/main.js",
-    "start-services": "docker-compose -f docker-compose.yml up -d",
+    "start-ws": "node ./dist/websockets/wsServer.js",
+    "start-db": "docker-compose -f docker-compose.yml up -d",
     "check-types": "tsc --noEmit",
     "test": "jest"
   },
@@ -25,6 +26,7 @@
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
     "tsx": "^4.7.0",
     "typescript": "^5.2.2"
   },
