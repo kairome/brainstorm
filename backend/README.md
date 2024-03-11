@@ -1,7 +1,7 @@
 # Backend
 
 ## Development
-1. Create .env file
+1. Create .env file in the root of the 'backend' folder
 2. It must contain the following:
 ```
 PORT=3030
@@ -12,6 +12,7 @@ WS_PORT=3434
 DB_NAME=brainstorm
 ```
 Adjust the values as necessary
+
 3. Run `yarn install`
 4. Install docker and docker-compose, if not already installed
 5. Run `yarn start-db`, that will launch a local instance of mongodb in the docker container
