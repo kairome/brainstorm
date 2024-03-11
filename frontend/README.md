@@ -1,12 +1,14 @@
 # Frontend
 
 ## Development
-1. Create .env file
+1. Create .env file in the root of the 'frontend' folder
 2. It must contain the following, adjust the ports as necessary
 ```
 VITE_API_URL=http://localhost:3030
 VITE_WS_URL=ws://localhost:3434
 ```
+Adjust the values as necessary
+
 3. Run `yarn install`
 4. Run `yarn dev`
 
