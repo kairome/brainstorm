@@ -4,7 +4,7 @@ module.exports = {
   extends: [
     'airbnb-typescript'
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts', '*.js'],
   parser: '@typescript-eslint/parser',
   'parserOptions': {
     'project': 'tsconfig.json'

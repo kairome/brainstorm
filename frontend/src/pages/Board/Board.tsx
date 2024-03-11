@@ -100,18 +100,6 @@ const Board: React.FC = () => {
     },
   };
 
-  /*
-  *
-  * actionsMenu: WithDefaultHelpers<NonNullable<ActionsMenuSchemaProviderProps['overrides']>>;
-    actions: WithDefaultHelpers<NonNullable<ActionsProviderProps['overrides']>>;
-    contextMenu: WithDefaultHelpers<NonNullable<TLUiContextMenuSchemaProviderProps['overrides']>>;
-    helpMenu: WithDefaultHelpers<NonNullable<TLUiHelpMenuSchemaProviderProps['overrides']>>;
-    menu: WithDefaultHelpers<NonNullable<TLUiMenuSchemaProviderProps['overrides']>>;
-    toolbar: WithDefaultHelpers<NonNullable<TLUiToolbarSchemaProviderProps['overrides']>>;
-    keyboardShortcutsMenu: WithDefaultHelpers<NonNullable<TLUiKeyboardShortcutsSchemaProviderProps['overrides']>>;
-    tools: WithDefaultHelpers<NonNullable<TLUiToolsProviderProps['overrides']>>;
-    translations: TLUiTranslationProviderProps['overrides'];*/
-
   return (
     <div className={s.canvas}>
       <Tldraw

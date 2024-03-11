@@ -9,7 +9,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "fix-lint": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "launch": "node serve.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.17.19",
@@ -17,6 +18,7 @@
     "@tldraw/tldraw": "^2.0.0-beta.3",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
+    "express": "^4.18.3",
     "lodash": "^4.17.21",
     "luxon": "^3.4.4",
     "postcss-custom-media": "^10.0.3",
